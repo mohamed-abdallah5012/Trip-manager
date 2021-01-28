@@ -19,6 +19,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -29,4 +33,23 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    // textInput
+    implementation 'com.google.android.material:material:1.2.1'
+
+    implementation "androidx.cardview:cardview:1.0.0"
+
+    // firebase
+    implementation 'com.google.firebase:firebase-database:19.6.0'
+    implementation 'com.google.firebase:firebase-storage:19.2.1'
+    //implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    implementation 'com.google.firebase:firebase-auth:20.0.2'
+
+
+    //twitter
+    //implementation('com.twitter.sdk.android:twitter:3.3.0@aar') { transitive = true }
+    //facebook
+    implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
+    //google
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
 }
+apply plugin: 'com.google.gms.google-services'
