@@ -3,6 +3,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId "com.example.tripreminder2021"
         minSdkVersion 16
@@ -19,9 +24,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+
+    sourceSets {
+        main {
+            res {
+                srcDirs 'src/main/res', 'src/main/res/values-v21'
+            }
+        }
+
     }
 }
 
@@ -29,9 +43,12 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.google.android.libraries.places:places:2.4.0'
+    implementation 'com.google.android.material:material:1.2.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
 
     // textInput
     implementation 'com.google.android.material:material:1.2.1'
@@ -51,5 +68,11 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
     //google
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
+    //butter knife
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+
 }
 apply plugin: 'com.google.gms.google-services'
+
