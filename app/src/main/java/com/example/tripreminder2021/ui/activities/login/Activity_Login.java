@@ -24,8 +24,11 @@ import android.widget.Toast;
 import com.example.tripreminder2021.MainActivity;
 import com.example.tripreminder2021.R;
 import com.example.tripreminder2021.config.SharedPreferencesManager;
+import com.example.tripreminder2021.dataValidation.DataValidator;
+import com.example.tripreminder2021.dataValidation.ValidationServices;
 import com.example.tripreminder2021.requests.ConnectionAvailability;
 import com.example.tripreminder2021.ui.activities.register.Activity_Register;
+import com.example.tripreminder2021.ui.activities.register.RegisterPresenter;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -35,7 +38,7 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class Activity_Login extends AppCompatActivity implements ILoginContract.View{
+public class Activity_Login extends AppCompatActivity implements ILoginContract.View,DataValidator.View{
 
 
     private static final int TIME_DELAY = 2000;
@@ -58,6 +61,7 @@ public class Activity_Login extends AppCompatActivity implements ILoginContract.
     private SharedPreferencesManager sharedPreferencesManager;
 
     private ILoginContract.Presenter getPresenter;
+    private DataValidator.Presenter getValidator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +83,7 @@ public class Activity_Login extends AppCompatActivity implements ILoginContract.
 
 
         getPresenter=new LoginPresenter(this,this);
-
+        getValidator=new ValidationServices(this,this);
         // Set the dimensions of the sign-in button.
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
@@ -125,7 +129,7 @@ public class Activity_Login extends AppCompatActivity implements ILoginContract.
             }
         });
 
-        login_action();
+        btn_login.setOnClickListener(v -> submitForm());
         register_action();
 
     }
@@ -145,85 +149,30 @@ public class Activity_Login extends AppCompatActivity implements ILoginContract.
         mPasswordView.setText(array[1]);
         checkBox.setChecked(true);
     }
-
-    private void login_action() {
-
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                submitForm();
-            }
-        });
-    }
-
-
-    /**
-     * Validating form
-     */
     private void submitForm() {
 
-        if (!validateEmail()) {
+        String email=mEmailView.getText().toString().trim();
+        String password=mPasswordView.getText().toString().trim();
+        if (!getValidator.validateEmail(email)) {
             return;
         }
-
-        if (!validatePassword()) {
+        if (!getValidator.validatePassword(password)){
             return;
         }
-
         try_to_login();
     }
     private void try_to_login()
     {
+        btn_login.setEnabled(false);
         String email=mEmailView.getText().toString().trim();
         String password=mPasswordView.getText().toString().trim();
         getPresenter.login(email,password);
     }
-    private boolean validateEmail() {
-        String email = mEmailView.getText().toString().trim();
-
-        if (email.isEmpty() || !isValidEmail(email)) {
-            inputLayoutEmail.setError("Enter valid email address");
-            requestFocus(mEmailView);
-            return false;
-        } else {
-            inputLayoutEmail.setErrorEnabled(false);
-        }
-
-        return true;
-    }
-
-
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
-
-    /**
-     * Validating Email
-     */
-    private static boolean isValidEmail(String email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-    /**
-     * Validating password
-     */
-    private boolean validatePassword() {
-        if (mPasswordView.getText().toString().trim().isEmpty()) {
-            inputLayoutPassword.setError("Enter the password");
-            requestFocus(mPasswordView);
-            return false;
-        } else {
-            inputLayoutPassword.setErrorEnabled(false);
-        }
-
-        return true;
-    }
-    /**
-     * Register _link
-     * Go to Register Activity
-     */
     private void register_action() {
         tv_register_link.setOnClickListener(v -> {
 
@@ -291,6 +240,21 @@ public class Activity_Login extends AppCompatActivity implements ILoginContract.
             progressBar.setVisibility(View.VISIBLE);
         else
             progressBar.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onNameIsValidated(boolean val, String message) {
+
+    }
+
+    @Override
+    public void onEmailIsValidated(boolean val, String message) {
+
+    }
+
+    @Override
+    public void onPasswordIsValidated(boolean val, String message) {
 
     }
 }
