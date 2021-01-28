@@ -1,5 +1,23 @@
 <resources>
     <string name="app_name">Trip Reminder</string>
+
+
+
+    <string name="facebook_app_id">3024190001138320</string>
+
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Title </string>
+    <string name="slide_1_desc"> Desc !</string>
+
+    <string name="slide_2_title">Title</string>
+    <string name="slide_2_desc">Desc !</string>
+
+    <string name="slide_3_title">Title </string>
+    <string name="slide_3_desc">Desc !</string>
+
     <string name="addNote">add note</string>
     <string name="add_trip">Add Trip</string>
     <string name="cancel">cancel</string>
@@ -23,6 +41,7 @@
         <item>One way Trip</item>
         <item>Round Trip</item>
     </string-array>
+
 
 
 </resources>
