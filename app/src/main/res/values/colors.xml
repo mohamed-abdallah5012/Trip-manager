@@ -41,9 +41,7 @@
     </array>
 
 
-    <color name="colorPrimary">#0277bd</color>
-    <color name="colorPrimaryDark">#004c8c</color>
-    <color name="colorAccent">#58a5f0</color>
+
     <color name="grey">#FDFDFD</color>
     <color name="grey1">#D5CCCC</color>
     <color name="white">#FFF</color>
