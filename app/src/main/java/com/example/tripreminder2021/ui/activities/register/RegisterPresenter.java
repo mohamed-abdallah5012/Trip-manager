@@ -52,7 +52,6 @@ public class RegisterPresenter implements IRegisterContract.Presenter {
 
                             toRegisterView.onShowProgressBar(false);
                             firebaseAuth.signOut();
-
                         }
                     });
         }

@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tripreminder2021.R;
@@ -27,6 +28,7 @@ public class Activity_Register extends AppCompatActivity implements IRegisterCon
     private DataValidator.Presenter getValidator;
 
     private Button btn_register;
+    private TextView txt_login_link;
     private EditText Username,Email,Password;
     private TextInputLayout inputLayoutName,inputLayoutEmail, inputLayoutPassword;
 
@@ -39,6 +41,7 @@ public class Activity_Register extends AppCompatActivity implements IRegisterCon
         Email=findViewById(R.id.register_email);
         Password=findViewById(R.id.register_password);
         btn_register=findViewById(R.id.btn_register);
+        txt_login_link=findViewById(R.id.tv_log_link);
 
         inputLayoutName =  findViewById(R.id.input_layout_register_username);
         inputLayoutEmail =  findViewById(R.id.input_layout_register_email);
@@ -53,6 +56,7 @@ public class Activity_Register extends AppCompatActivity implements IRegisterCon
         getValidator=new ValidationServices(this,this);
 
         btn_register.setOnClickListener(v -> submitForm());
+        txt_login_link.setOnClickListener(v -> finish());
     }
 
     private void try_to_register(){
