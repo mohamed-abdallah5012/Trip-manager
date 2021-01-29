@@ -138,7 +138,8 @@ public class AddBtnActivity extends AppCompatActivity implements TimePickerDialo
         AutocompleteSupportFragment placeDestPointAutoComplete;
        if (!Places.isInitialized()) {
             // @TODO Get Places API key
-            Places.initialize(getApplicationContext(), "AIzaSyDhtVSlNM52yj-vH7H7SMEFswg7CtaVCUQ");
+
+           Places.initialize(getApplicationContext(), "AIzaSyDhtVSlNM52yj-vH7H7SMEFswg7CtaVCUQ");
 //            mPlacesClient=Places.createClient(this);     AIzaSyDhtVSlNM52yj-vH7H7SMEFswg7CtaVCUQ
         }
         //Init Frags

@@ -4,6 +4,7 @@
 
 
     <string name="facebook_app_id">3024190001138320</string>
+    <string name="fb_login_protocol_scheme">fb3024190001138320</string>
 
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
@@ -27,6 +28,24 @@
     <string name="start_point">Start Point</string>
     <string name="destination">Destination</string>
     <string name="trip_name">Trip Name</string>
+    <string name="enter_email_hint">Enter The Email</string>
+    <string name="enter_password_hint">Enter The Password</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="remember_me">Remember_Me</string>
+    <string name="login_button">Login</string>
+    <string name="create_account">Create new Account</string>
+    <string name="enter_name_hint">Enter The User Name</string>
+    <string name="register_button">Register</string>
+    <string name="already_have_account">Login</string>
+    <string name="submit">Submit</string>
+    <string name="restPasswordTitle">Rest Password</string>
+    <string name="enter_valid_email">Enter Valid Email</string>
+    <string name="rest_link_sent_to_you"> Email Sent, Please Check Your mail</string>
+    <string name="enter_your_email">Enter Your Email</string>
+    <string name="twitter_api_key">test</string>
+    <string name="twitter_api_secret">test</string>
+    <string name="login_with_twitter">Login with twitter</string>
+
     <string name="to">to</string>
     <string name="from">from</string>
     <string name="home_second">History</string>
@@ -39,6 +58,7 @@
     <string name="delete_trip">delete trip</string>
     <string name="cancel_trip">cancel trip</string>
     <string name="menu_slideshow">Logout</string>
+
 
 
     <string-array name="times_array">
