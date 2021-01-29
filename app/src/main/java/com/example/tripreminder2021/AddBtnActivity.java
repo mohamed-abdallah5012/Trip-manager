@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.tripreminder2021.Data.RemoteData.FirebaseDB;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -33,6 +34,8 @@ import com.example.tripreminder2021.TripModel;
 import com.example.tripreminder2021.AlarmEventReciever;
 import com.example.tripreminder2021.DatePickerFragment;
 import com.example.tripreminder2021.TimePickerFragment;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -97,6 +100,9 @@ public class AddBtnActivity extends AppCompatActivity implements TimePickerDialo
 
     Calendar mCalendar;
 
+    FirebaseDB fbdb;
+
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +120,17 @@ public class AddBtnActivity extends AppCompatActivity implements TimePickerDialo
 
         // add first Note to mNotesTextInputLayout !
         mNotesTextInputLayout.add(noteTextField);
+//        List <String> l = null;
+//        l.add("aaa");
+//
+//        TripModel newTrip = new TripModel("selectedStartPlace", "selectedEndPlace", "dateTextField.getText().toString()",
+//                "timeTextField.getText().toString()", "tripNameTextField.getEditText().getText().toString()", "null",l, "mCalendar.getTime().toString()");
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("trip").child("mail").setValue("mmmmmmmmmmm");
+
+       // fbdb.saveTripToDatabase(newTrip);
+
     }
 
     private void setUpAutoComplete() {
@@ -183,6 +200,12 @@ public class AddBtnActivity extends AppCompatActivity implements TimePickerDialo
                 } else {
                     TripModel newTrip = new TripModel(selectedStartPlace, selectedEndPlace, dateTextField.getText().toString(),
                             timeTextField.getText().toString(), tripNameTextField.getEditText().getText().toString(), null, notesList, mCalendar.getTime().toString());
+
+
+                   // fbdb.saveTripToDatabase(newTrip);
+
+                    databaseReference = FirebaseDatabase.getInstance().getReference();
+                    databaseReference.child("trip").child("mail").setValue(newTrip);
 
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("NEWTRIP", newTrip);
