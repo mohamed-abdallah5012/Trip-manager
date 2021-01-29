@@ -90,7 +90,6 @@ public class LoginPresenter implements ILoginContract.Presenter{
                         xyz.userData(user.getEmail(),user.getUid());
                     } else {
                         toLoginView.onLoginError(task.getException().getMessage());
-
                     }
                     toLoginView.onShowProgressBar(false);
                 });
