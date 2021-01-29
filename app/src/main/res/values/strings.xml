@@ -46,6 +46,20 @@
     <string name="twitter_api_secret">test</string>
     <string name="login_with_twitter">Login with twitter</string>
 
+    <string name="to">to</string>
+    <string name="from">from</string>
+    <string name="home_second">History</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="home">Home</string>
+    <string name="menu_home">History</string>
+    <string name="menu_gallery">Sync</string>
+    <string name="logout">Logout</string>
+    <string name="delete_trip">delete trip</string>
+    <string name="cancel_trip">cancel trip</string>
+    <string name="menu_slideshow">Logout</string>
+
+
 
     <string-array name="times_array">
         <item>Don\'t Repeat</item>
