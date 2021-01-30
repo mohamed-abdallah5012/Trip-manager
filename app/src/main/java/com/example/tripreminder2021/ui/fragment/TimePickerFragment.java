@@ -1,4 +1,4 @@
-package com.example.tripreminder2021;
+package com.example.tripreminder2021.ui.fragment;
 //
 
 import android.app.Dialog;

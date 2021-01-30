@@ -1,4 +1,4 @@
-package com.example.tripreminder2021.ui.navigation.slideShow.slideShow;
+package com.example.tripreminder2021.viewModels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
