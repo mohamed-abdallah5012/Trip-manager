@@ -123,7 +123,7 @@ public class LoginPresenter implements ILoginContract.Presenter{
     }
     @Override
     public void loginWithTwitter(AuthCredential credential) {
-       toLoginView.onShowProgressBar(true);
+       /*toLoginView.onShowProgressBar(true);
        firebaseAuth.signInWithCredential(credential).
                addOnCompleteListener((Activity) context, task -> {
 
@@ -144,6 +144,7 @@ public class LoginPresenter implements ILoginContract.Presenter{
                    toLoginView.onShowProgressBar(false);
 
                });
+               */
     }
     @Override
     public void restPassword(String email) {
