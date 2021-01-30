@@ -5,11 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,11 +19,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tripreminder2021.AddBtnActivity;
 import com.example.tripreminder2021.R;
 import com.example.tripreminder2021.config.SharedPreferencesManager;
 import com.example.tripreminder2021.dataValidation.DataValidator;
 import com.example.tripreminder2021.dataValidation.ValidationServices;
+import com.example.tripreminder2021.ui.activities.UpcomingTripsActivity;
 import com.example.tripreminder2021.ui.activities.register.Activity_Register;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -52,7 +50,6 @@ import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-import com.twitter.sdk.android.core.internal.TwitterApi;
 
 public class Activity_Login extends AppCompatActivity
         implements ILoginContract.View,DataValidator.View {
@@ -173,7 +170,6 @@ public class Activity_Login extends AppCompatActivity
         String password = mPasswordView.getText().toString().trim();
         getPresenter.login(email, password);
     }
-
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -185,7 +181,7 @@ public class Activity_Login extends AppCompatActivity
         super.onStart();
         sharedPreferencesManager = new SharedPreferencesManager(this);
         if (sharedPreferencesManager.isUserLogin()) {
-            Intent intent = new Intent(Activity_Login.this, Activity_Login.class);
+            Intent intent = new Intent(Activity_Login.this, UpcomingTripsActivity.class);
             startActivity(intent);
         }
         if (sharedPreferencesManager.isUserDataSaved()) {
@@ -230,7 +226,7 @@ public class Activity_Login extends AppCompatActivity
     public void onLoginSuccess() {
         btn_login.setEnabled(true);
         Toast.makeText(this, "Login Successfully", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, AddBtnActivity.class));
+        startActivity(new Intent(this, UpcomingTripsActivity.class));
     }
 
     @Override

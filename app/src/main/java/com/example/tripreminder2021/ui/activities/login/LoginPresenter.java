@@ -7,6 +7,8 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 
+import com.example.tripreminder2021.config.Constants;
+import com.example.tripreminder2021.config.SharedPreferencesManager;
 import com.example.tripreminder2021.pojo.User;
 import com.example.tripreminder2021.requests.ConnectionAvailability;
 import com.facebook.login.LoginResult;
@@ -27,12 +29,12 @@ public class LoginPresenter implements ILoginContract.Presenter{
 
 
     private ILoginContract.View toLoginView;
-    private ILoginContract.UserData xyz;
     private Context context ;
     private ConnectionAvailability checkInternetConnection;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
     private ProgressBar progressBar;
+    SharedPreferencesManager sharedPreferencesManager;
 
 
 
@@ -44,10 +46,7 @@ public class LoginPresenter implements ILoginContract.Presenter{
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         progressBar=new ProgressBar(context);
-    }
-    public  LoginPresenter(ILoginContract.UserData xyz)
-    {
-        this.xyz =xyz;
+        sharedPreferencesManager=new SharedPreferencesManager(context);
     }
 
     @Override
@@ -62,7 +61,9 @@ public class LoginPresenter implements ILoginContract.Presenter{
             firebaseAuth.signInWithEmailAndPassword(email,password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()){
+                            Constants.CURRENT_USER_ID=firebaseAuth.getCurrentUser().getUid();
                             toLoginView.onLoginSuccess();
+                            sharedPreferencesManager.setIsUserLogin(true);
                         }
                         else {
                             toLoginView.onLoginError(task.getException().getMessage());
@@ -79,15 +80,16 @@ public class LoginPresenter implements ILoginContract.Presenter{
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener((Activity) context, task -> {
                     if (task.isSuccessful()) {
+                        Constants.CURRENT_USER_ID=firebaseAuth.getCurrentUser().getUid();
 
                         FirebaseUser user = firebaseAuth.getCurrentUser();
-                        databaseReference.child("Users").child(user.getUid()).child("email").setValue(user.getEmail());
-                        databaseReference.child("Users").child(user.getUid()).child("name").setValue(user.getDisplayName());
-                        databaseReference.child("Users").child(user.getUid()).child("password").setValue("Login with google");
+                        databaseReference.child(Constants.USER_CHILD_NAME).child(user.getUid()).child("email").setValue(user.getEmail());
+                        databaseReference.child(Constants.USER_CHILD_NAME).child(user.getUid()).child("name").setValue(user.getDisplayName());
+                        databaseReference.child(Constants.USER_CHILD_NAME).child(user.getUid()).child("password").setValue("Login with google");
 
                         toLoginView.onShowProgressBar(false);
                         toLoginView.onLoginSuccess();
-                        xyz.userData(user.getEmail(),user.getUid());
+                        sharedPreferencesManager.setIsUserLogin(true);
                     } else {
                         toLoginView.onLoginError(task.getException().getMessage());
                     }
@@ -103,13 +105,14 @@ public class LoginPresenter implements ILoginContract.Presenter{
 
                     if (task.isSuccessful())
                     {
+                        Constants.CURRENT_USER_ID=firebaseAuth.getCurrentUser().getUid();
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         User facebookUser=new User(user.getDisplayName(),user.getEmail(),"Login using facebook");
-                        databaseReference.child("Users").child(user.getUid()).
+                        databaseReference.child(Constants.USER_CHILD_NAME).child(user.getUid()).
                                 setValue(facebookUser);
                         toLoginView.onShowProgressBar(false);
                         toLoginView.onLoginSuccess();
-                        xyz.userData(user.getEmail(),user.getUid());
+                        sharedPreferencesManager.setIsUserLogin(true);
                     }
                     else {
                         toLoginView.onLoginError(task.getException().getMessage());
@@ -126,13 +129,14 @@ public class LoginPresenter implements ILoginContract.Presenter{
 
                    if (task.isSuccessful())
                    {
+                       Constants.CURRENT_USER_ID=firebaseAuth.getCurrentUser().getUid();
                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                       User facebookUser=new User(user.getDisplayName(),user.getEmail(),"Login using twitter");
-                       databaseReference.child("Users").child(user.getUid()).
-                               setValue(facebookUser);
+                       User twitterUser=new User(user.getDisplayName(),user.getEmail(),"Login using twitter");
+                       databaseReference.child(Constants.USER_CHILD_NAME).child(user.getUid()).
+                               setValue(twitterUser);
                        toLoginView.onShowProgressBar(false);
                        toLoginView.onLoginSuccess();
-                       xyz.userData(user.getEmail(),user.getUid());
+                       sharedPreferencesManager.setIsUserLogin(true);
                    }
                    else {
                        toLoginView.onLoginError(task.getException().getMessage());
@@ -154,7 +158,6 @@ public class LoginPresenter implements ILoginContract.Presenter{
 
                     toLoginView.onShowProgressBar(false);
                 });
-
     }
 
 }

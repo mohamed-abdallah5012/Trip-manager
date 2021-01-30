@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.tripreminder2021.pojo.TripModel;
+import com.example.tripreminder2021.ui.activities.AddBtnActivity;
+
 public class AlarmEventReciever extends BroadcastReceiver {
     public static final String RECEIVED_TRIP = "RECEIVED_TRIP";
     public static final String RECEIVED_TRIP_SEND_SERIAL = "RECEIVED_TRIP_SEND_SERIAL";

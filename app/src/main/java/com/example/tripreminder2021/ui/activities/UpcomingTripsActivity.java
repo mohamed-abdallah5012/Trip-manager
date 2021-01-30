@@ -5,6 +5,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.tripreminder2021.config.SharedPreferencesManager;
 import com.example.tripreminder2021.ui.activities.login.Activity_Login;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.tripreminder2021.*;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -26,6 +28,7 @@ public class UpcomingTripsActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
 
     FloatingActionButton fab;
+    private SharedPreferencesManager sharedPreferencesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,8 @@ public class UpcomingTripsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_upcoming_trips);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        sharedPreferencesManager=new SharedPreferencesManager(this);
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +75,8 @@ public class UpcomingTripsActivity extends AppCompatActivity {
                 } else if (menuItem.getItemId() == R.id.nav_logout) {
                     //Navigation here
                    // signOut() method here
+                    FirebaseAuth.getInstance().signOut();
+                    sharedPreferencesManager.setIsUserLogin(false);
                     drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     Intent mainIntent = new Intent(UpcomingTripsActivity.this, Activity_Login.class);
                     startActivity(mainIntent);
@@ -95,8 +102,11 @@ public class UpcomingTripsActivity extends AppCompatActivity {
 
 
     }
-
-
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        finishAffinity();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

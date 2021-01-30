@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/delete"
+        android:id="@+id/action_history_delete_note"
         android:title="@string/delete_trip">
 
     </item>
     <item
         android:title="View Notes"
-        android:id="@+id/viewnotes">
+        android:id="@+id/action_history_view_notes">
 
     </item>
 </menu>

@@ -2,6 +2,8 @@ package com.example.tripreminder2021.ui.activities.register;
 
 import android.content.Context;
 import android.widget.ProgressBar;
+
+import com.example.tripreminder2021.config.Constants;
 import com.example.tripreminder2021.pojo.User;
 import com.example.tripreminder2021.requests.ConnectionAvailability;
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,14 +12,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterPresenter implements IRegisterContract.Presenter {
 
-
     private IRegisterContract.View toRegisterView;
     private Context context;
     private ConnectionAvailability checkInternetConnection;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
     private ProgressBar progressBar;
-
 
     public RegisterPresenter(IRegisterContract.View toRegisterView, Context context) {
         this.toRegisterView = toRegisterView;
@@ -39,7 +39,7 @@ public class RegisterPresenter implements IRegisterContract.Presenter {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             User user = new User(name, email, password);
-                            FirebaseDatabase.getInstance().getReference("Users")
+                            FirebaseDatabase.getInstance().getReference(Constants.USER_CHILD_NAME)
                                     .child(firebaseAuth.getCurrentUser().getUid()).setValue(user)
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {

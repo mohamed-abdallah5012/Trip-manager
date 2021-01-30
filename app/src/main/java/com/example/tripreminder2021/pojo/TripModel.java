@@ -1,4 +1,4 @@
-package com.example.tripreminder2021;
+package com.example.tripreminder2021.pojo;
 
 import java.io.Serializable;
 import java.util.ArrayList;

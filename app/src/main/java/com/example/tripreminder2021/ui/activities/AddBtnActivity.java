@@ -1,4 +1,4 @@
-package com.example.tripreminder2021;
+package com.example.tripreminder2021.ui.activities;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -21,7 +21,13 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.tripreminder2021.AlarmEventReciever;
 import com.example.tripreminder2021.Data.RemoteData.FirebaseDB;
+import com.example.tripreminder2021.R;
+import com.example.tripreminder2021.config.Constants;
+import com.example.tripreminder2021.ui.fragment.DatePickerFragment;
+import com.example.tripreminder2021.ui.fragment.TimePickerFragment;
+import com.example.tripreminder2021.viewModels.UpcomingViewModel;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -30,10 +36,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.example.tripreminder2021.TripModel;
-import com.example.tripreminder2021.AlarmEventReciever;
-import com.example.tripreminder2021.DatePickerFragment;
-import com.example.tripreminder2021.TimePickerFragment;
+import com.example.tripreminder2021.pojo.TripModel;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -48,11 +51,15 @@ import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddBtnActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class AddBtnActivity extends AppCompatActivity
+        implements TimePickerDialog.OnTimeSetListener,
+        DatePickerDialog.OnDateSetListener {
     public static final String NEW_TRIP_OBJECT = "NEW_TRIP_OBJECT";
     public static final String NEW_TRIP_OBJ_SERIAL = "NEW_TRIP_OBJECT";
 
@@ -108,6 +115,7 @@ public class AddBtnActivity extends AppCompatActivity implements TimePickerDialo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_btn);
+
         ButterKnife.bind(this);
         mCalendar = Calendar.getInstance();
         hideProgressBar();
@@ -120,15 +128,6 @@ public class AddBtnActivity extends AppCompatActivity implements TimePickerDialo
 
         // add first Note to mNotesTextInputLayout !
         mNotesTextInputLayout.add(noteTextField);
-//        List <String> l = null;
-//        l.add("aaa");
-//
-//        TripModel newTrip = new TripModel("selectedStartPlace", "selectedEndPlace", "dateTextField.getText().toString()",
-//                "timeTextField.getText().toString()", "tripNameTextField.getEditText().getText().toString()", "null",l, "mCalendar.getTime().toString()");
-
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("trip").child("mail").setValue("mmmmmmmmmmm");
-
        // fbdb.saveTripToDatabase(newTrip);
 
     }
@@ -206,7 +205,10 @@ public class AddBtnActivity extends AppCompatActivity implements TimePickerDialo
                    // fbdb.saveTripToDatabase(newTrip);
 
                     databaseReference = FirebaseDatabase.getInstance().getReference();
-                    databaseReference.child("trip").child("mail").setValue(newTrip);
+                    databaseReference.child(Constants.TRIP_CHILD_NAME)
+                            .child(Constants.CURRENT_USER_ID)
+                            .push()
+                            .setValue(newTrip);
 
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("NEWTRIP", newTrip);
