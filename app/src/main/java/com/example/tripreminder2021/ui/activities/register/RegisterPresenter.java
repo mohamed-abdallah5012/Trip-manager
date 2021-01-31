@@ -3,7 +3,7 @@ package com.example.tripreminder2021.ui.activities.register;
 import android.content.Context;
 import android.widget.ProgressBar;
 
-import com.example.tripreminder2021.config.Constants;
+import com.example.tripreminder2021.config.*;
 import com.example.tripreminder2021.pojo.User;
 import com.example.tripreminder2021.requests.ConnectionAvailability;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,7 +39,7 @@ public class RegisterPresenter implements IRegisterContract.Presenter {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             User user = new User(name, email, password);
-                            FirebaseDatabase.getInstance().getReference(Constants.USER_CHILD_NAME)
+                            FirebaseDatabase.getInstance().getReference(Constants.TRIP_CHILD_NAME)
                                     .child(firebaseAuth.getCurrentUser().getUid()).setValue(user)
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {

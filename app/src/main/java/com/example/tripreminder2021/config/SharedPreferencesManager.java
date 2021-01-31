@@ -15,14 +15,14 @@ public class SharedPreferencesManager {
     private static final String IS_FIRST_TIME_LAUNCH = "IS_FIRST_TIME_LAUNCH";
 
     // Shared preferences for User_Data
-    public static final String EMAIL_SHARED_PREF = "email";
-    public static final String PASSWORD_SHARED_PREF = "password";
+    private static final String EMAIL_SHARED_PREF = "email";
+    private static final String PASSWORD_SHARED_PREF = "password";
 
-    public static final String IS_USER_LOGIN = "isUserLogin";
+    private static final String IS_USER_LOGIN = "isUserLogin";
 
-    public static final String IS_USER_DATA_SAVED="false";
+    private static final String IS_USER_DATA_SAVED="false";
 
-
+    private static final String CURRENT_USER_ID="user_ID";
 
     public SharedPreferencesManager(Context context) {
         this._context = context;
@@ -63,14 +63,24 @@ public class SharedPreferencesManager {
     public boolean isUserDataSaved(){
         return pref.getBoolean(IS_USER_DATA_SAVED,false);
     }
-    public String [] getUSerData()
-    {
+
+    public String [] getUSerData() {
         String [] userData = new String[2];
         String email=pref.getString(EMAIL_SHARED_PREF,"email");
         String password=pref.getString(PASSWORD_SHARED_PREF,"email");
         userData[0]=email;
         userData[1]=password;
         return userData;
+    }
+
+    public void setUserID(String user_id)
+    {
+        editor.putString(CURRENT_USER_ID, user_id);
+        editor.commit();
+    }
+    public String getUserID()
+    {
+        return pref.getString(CURRENT_USER_ID, "");
     }
 
 

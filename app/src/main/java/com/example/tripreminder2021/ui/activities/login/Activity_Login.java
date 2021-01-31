@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tripreminder2021.R;
+import com.example.tripreminder2021.config.*;
 import com.example.tripreminder2021.config.SharedPreferencesManager;
 import com.example.tripreminder2021.dataValidation.DataValidator;
 import com.example.tripreminder2021.dataValidation.ValidationServices;
@@ -91,7 +93,7 @@ public class Activity_Login extends AppCompatActivity
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(getResources().getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
@@ -148,7 +150,7 @@ public class Activity_Login extends AppCompatActivity
         String[] array = sharedPreferencesManager.getUSerData();
         mEmailView.setText(array[0]);
         mPasswordView.setText(array[1]);
-        checkBox.setChecked(true);
+        checkBox.setChecked(false);
     }
 
     private void submitForm() {
@@ -181,6 +183,7 @@ public class Activity_Login extends AppCompatActivity
         super.onStart();
         sharedPreferencesManager = new SharedPreferencesManager(this);
         if (sharedPreferencesManager.isUserLogin()) {
+            Constants.CURRENT_USER_ID=sharedPreferencesManager.getUserID();
             Intent intent = new Intent(Activity_Login.this, UpcomingTripsActivity.class);
             startActivity(intent);
         }

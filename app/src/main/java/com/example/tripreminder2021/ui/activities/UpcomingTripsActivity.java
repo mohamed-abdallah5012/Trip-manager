@@ -1,6 +1,7 @@
 package com.example.tripreminder2021.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,9 +74,13 @@ public class UpcomingTripsActivity extends AppCompatActivity {
 
                     return true;
                 } else if (menuItem.getItemId() == R.id.nav_logout) {
+                    Log.i("TAG", "onNavigationItemSelected: hhhhhhhhhhhhhhh");
+                    Log.i("TAG", "logoutt"+FirebaseAuth.getInstance().getCurrentUser());
+
                     //Navigation here
                    // signOut() method here
                     FirebaseAuth.getInstance().signOut();
+                    Log.i("TAG", "logouthhhhhhhhht"+FirebaseAuth.getInstance().getCurrentUser());
                     sharedPreferencesManager.setIsUserLogin(false);
                     drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     Intent mainIntent = new Intent(UpcomingTripsActivity.this, Activity_Login.class);

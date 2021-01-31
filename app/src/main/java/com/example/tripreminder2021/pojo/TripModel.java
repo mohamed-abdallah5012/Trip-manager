@@ -6,8 +6,17 @@ import java.util.List;
 
 public class TripModel implements Serializable {
 
+    public String getInclude_in() {
+        return include_in;
+    }
+
+    public void setInclude_in(String include_in) {
+        this.include_in = include_in;
+    }
 
     public String startloc,endloc,date,time,status,tripname,dateTime;
+
+    private String include_in;
     private List<String> notes = new ArrayList<>();
     //@TODO add lat Long
 
@@ -27,7 +36,8 @@ public class TripModel implements Serializable {
         this.notes = notes;
     }
 
-    public TripModel(String startloc, String endloc, String date, String time, String tripname, String status, List<String> notes, String dateTime) {
+    public TripModel(String startloc, String endloc, String date, String time, String tripname, String status,
+                     List<String> notes, String dateTime,String include_in) {
         this.startloc = startloc;
         this.endloc = endloc;
         this.date = date;
@@ -37,6 +47,7 @@ public class TripModel implements Serializable {
         this.status = status;
         this.notes = notes;
         this.dateTime = dateTime;
+        this.include_in = include_in;
     }
     public TripModel(String startloc, String endloc, String date, String time, String tripname, String status, List<String> notes) {
         this.startloc = startloc;
