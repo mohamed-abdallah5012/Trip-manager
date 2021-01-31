@@ -6,6 +6,18 @@ public class Constants {
 
     public static final String USER_CHILD_NAME="Users";
     public static final String TRIP_CHILD_NAME="Trips";
-    public static String CURRENT_USER_ID="user_ID";
+    public static  String CURRENT_USER_ID="user_ID";
+
+    // for filter history , upcoming
+    public static final String SEARCH_CHILD_NAME="include_in";
+    public static final String SEARCH_CHILD_HISTORY_KEY="HISTORY";
+    public static final String SEARCH_CHILD_UPCOMING_KEY="UPCOMING";
+
+    // for updating status Upcoming , Done , Canceled
+    public static final String STATUS_CHILD_NAME="status";
+    public static final String STATUS_CHILD_UPCOMING_KEY="UPCOMING";
+    public static final String STATUS_CHILD_DONE_KEY="DONE";
+    public static final String STATUS_CHILD_CANCELED_KEY="CANCELED";
+
 
 }

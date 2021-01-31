@@ -60,7 +60,6 @@
     <string name="menu_slideshow">Logout</string>
 
 
-
     <string-array name="times_array">
         <item>Don\'t Repeat</item>
         <item>Daily</item>

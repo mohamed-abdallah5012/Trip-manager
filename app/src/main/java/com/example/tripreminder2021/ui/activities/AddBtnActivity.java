@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.example.tripreminder2021.AlarmEventReciever;
 import com.example.tripreminder2021.Data.RemoteData.FirebaseDB;
 import com.example.tripreminder2021.R;
-import com.example.tripreminder2021.config.Constants;
+import com.example.tripreminder2021.config.*;
 import com.example.tripreminder2021.ui.fragment.DatePickerFragment;
 import com.example.tripreminder2021.ui.fragment.TimePickerFragment;
 import com.example.tripreminder2021.viewModels.UpcomingViewModel;
@@ -198,11 +198,14 @@ public class AddBtnActivity extends AppCompatActivity
                 } else if (timeTextField.getText().toString().equals("")) {
                     timeTextField.setError("Cannot be blank!");
                 } else {
-                    TripModel newTrip = new TripModel(selectedStartPlace, selectedEndPlace, dateTextField.getText().toString(),
-                            timeTextField.getText().toString(), tripNameTextField.getEditText().getText().toString(), null, notesList, mCalendar.getTime().toString());
 
+                    TripModel newTrip = new TripModel(selectedStartPlace, selectedEndPlace,
+                            dateTextField.getText().toString(),
+                            timeTextField.getText().toString(),
+                            tripNameTextField.getEditText().getText().toString()
+                            , "start", notesList, mCalendar.getTime().toString(),
+                            Constants.SEARCH_CHILD_UPCOMING_KEY);
 
-                   // fbdb.saveTripToDatabase(newTrip);
 
                     databaseReference = FirebaseDatabase.getInstance().getReference();
                     databaseReference.child(Constants.TRIP_CHILD_NAME)

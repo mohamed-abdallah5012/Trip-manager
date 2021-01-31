@@ -3,14 +3,30 @@
 
 
 
-    <item android:id="@+id/action_upcoming_view_notes"
-        android:title="View Notes">
+    <item android:id="@+id/action_upcoming_show_notes"
+        android:title="Show Notes">
+
+    </item>
+
+    <item android:id="@+id/action_upcoming_add_notes"
+        android:title="Add Notes">
+
+    </item>
+
+    <item android:id="@+id/action_upcoming_edit_trip"
+        android:title="Edit Trip">
 
     </item>
 
     <item
-        android:id="@+id/action_upcoming_cancel_note"
+        android:id="@+id/action_upcoming_cancel_trip"
         android:title="@string/cancel_trip">
 
     </item>
+
+    <item
+    android:id="@+id/action_upcoming_delete_trip"
+    android:title="@string/delete_trip">
+
+</item>
 </menu>

@@ -1,8 +1,6 @@
 package com.example.tripreminder2021.repository;
 
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
@@ -17,22 +15,22 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class UpcomingRepository {
+public class HistoryRepository {
 
     private ArrayList<TripModel> allTrips=new ArrayList<>();
     private MutableLiveData<ArrayList<TripModel>> trips=new MutableLiveData<>();
-    private static UpcomingRepository instance;
+    private static HistoryRepository instance;
 
 
-    public static UpcomingRepository getInstance()
+    public static HistoryRepository getInstance()
     {
         if (instance==null)
         {
-            instance=new UpcomingRepository();
+            instance=new HistoryRepository();
         }
         return instance;
     }
-    public MutableLiveData<ArrayList<TripModel>> getUpcomingTrips()
+    public MutableLiveData<ArrayList<TripModel>> getHistoryTrips()
     {
         if (allTrips.size()==0) getTrips();
         trips.setValue(allTrips);
@@ -40,14 +38,13 @@ public class UpcomingRepository {
     }
     private void getTrips()
     {
-
-        Log.i("TAG", "getTrips: "+Constants.CURRENT_USER_ID);
         FirebaseDatabase database=FirebaseDatabase.getInstance();
         DatabaseReference reference=database.getReference();
-        Query query=reference.child(Constants.TRIP_CHILD_NAME)
-                .child(Constants.CURRENT_USER_ID).
-                     orderByChild(Constants.SEARCH_CHILD_NAME).
-                        equalTo(Constants.SEARCH_CHILD_UPCOMING_KEY);
+        Query query=reference.child(Constants.TRIP_CHILD_NAME).
+                child(Constants.CURRENT_USER_ID).
+                        orderByChild(Constants.SEARCH_CHILD_NAME).
+                                equalTo(Constants.SEARCH_CHILD_HISTORY_KEY);
+
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
