@@ -73,7 +73,7 @@
                 android:layout_marginTop="24dp"
                 android:orientation="horizontal"
                 android:weightSum="2"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
                 <Spinner
                     android:id="@+id/repeat_spinner"
@@ -152,7 +152,7 @@
                     android:hint="@string/date"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/autoCompleteTVDestination"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout"
                     app:startIconContentDescription="Pick Date"
                     app:startIconDrawable="@drawable/ic_date_range_24px">
 
@@ -187,6 +187,93 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+
+
+
+
+
+
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                app:layout_constraintBottom_toTopOf="@+id/repeat_spin_linearlayout"
+                >
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/TextInputDate2"
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="1"
+                    android:hint="@string/date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/autoCompleteTVDestination"
+                    app:startIconContentDescription="Pick Date"
+                    app:startIconDrawable="@drawable/ic_date_range_24px"
+                    android:visibility="gone"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dateEdit_back"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:focusable="false"
+
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/TextInputTime2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="1"
+                    android:hint="@string/time"
+
+                    app:startIconContentDescription="Pick Date"
+                    app:startIconDrawable="@drawable/ic_schedule_24px"
+                    android:visibility="gone"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/clockEdit_back"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:focusable="false" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             <TextView

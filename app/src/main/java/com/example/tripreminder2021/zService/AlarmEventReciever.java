@@ -1,4 +1,4 @@
-package com.example.tripreminder2021;
+package com.example.tripreminder2021.zService;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,18 +20,12 @@ public class AlarmEventReciever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        //Toast.makeText(context,"service music",Toast.LENGTH_LONG).show();
-        Log.i("service ", "serviceAlarmHasFired");
-//        Toast.makeText(context.getApplicationContext(), "Alarm Manager just ran", Toast.LENGTH_LONG).show();
-//        Intent myService = new Intent(context, MyRingingService.class);
-//        context.startService(myService);
-
         Bundle b = intent.getBundleExtra(AddBtnActivity.NEW_TRIP_OBJECT);
         TripModel tm = (TripModel) b.getSerializable(AddBtnActivity.NEW_TRIP_OBJ_SERIAL);
 
         if (tm != null) {
             displayAlert(tm);
-            Log.i("OnReceive", "Trip name" + tm.getTripname());
+            Log.d("OnReceive", "Trip name" + tm.getTripname());
         }
 
     }
@@ -39,13 +33,13 @@ public class AlarmEventReciever extends BroadcastReceiver {
     private void displayAlert(TripModel tm) {
 
         //joe
-//        Intent i = new Intent(context, MyDialogActivity.class);
-//        Bundle b = new Bundle();
-//        b.putSerializable(RECEIVED_TRIP_SEND_SERIAL, tm);
-//
-//        i.putExtra(RECEIVED_TRIP, b);
-//        i.setClass(context, MyDialogActivity.class);
-//        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.startActivity(i);
+        Intent i = new Intent(context, MyDialogActivity.class);
+        Bundle b = new Bundle();
+        b.putSerializable(RECEIVED_TRIP_SEND_SERIAL, tm);
+
+        i.putExtra(RECEIVED_TRIP, b);
+        i.setClass(context, MyDialogActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
     }
 }

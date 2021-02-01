@@ -42,14 +42,14 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.TwitterAuthProvider;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterConfig;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+//import com.twitter.sdk.android.core.Callback;
+//import com.twitter.sdk.android.core.Result;
+//import com.twitter.sdk.android.core.Twitter;
+//import com.twitter.sdk.android.core.TwitterAuthConfig;
+//import com.twitter.sdk.android.core.TwitterConfig;
+//import com.twitter.sdk.android.core.TwitterException;
+//import com.twitter.sdk.android.core.TwitterSession;
+//import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 public class Activity_Login extends AppCompatActivity
         implements ILoginContract.View,DataValidator.View {
@@ -68,7 +68,7 @@ public class Activity_Login extends AppCompatActivity
     private SignInButton loginWithGoogle;
     private GoogleSignInClient mGoogleSignInClient;
 
-    private TwitterLoginButton loginWithTwitter;
+  //  private TwitterLoginButton loginWithTwitter;
     // shared preference
     private SharedPreferencesManager sharedPreferencesManager;
     // interface
@@ -90,12 +90,12 @@ public class Activity_Login extends AppCompatActivity
         getValidator = new ValidationServices(this, this);
 
         // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestIdToken(getString(R.string.default_web_client_id))
+//                .requestEmail()
+//                .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+       // mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         loginWithGoogle.setOnClickListener(v -> {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent, 100);
@@ -105,12 +105,12 @@ public class Activity_Login extends AppCompatActivity
         loginWithFacebook.registerCallback(callbackManager,new FacebookCallBack());
 
 
-        TwitterAuthConfig config =new TwitterAuthConfig(getString(R.string.twitter_api_key),
-                                                    getString(R.string.twitter_api_secret));
-        TwitterConfig twitterConfig =new TwitterConfig.Builder(this)
-                .twitterAuthConfig(config).build();
-        Twitter.initialize(twitterConfig);
-        loginWithTwitter.setCallback(new TwitterCallBack());
+//        TwitterAuthConfig config =new TwitterAuthConfig(getString(R.string.twitter_api_key),
+//                                                    getString(R.string.twitter_api_secret));
+//        TwitterConfig twitterConfig =new TwitterConfig.Builder(this)
+//                .twitterAuthConfig(config).build();
+//        Twitter.initialize(twitterConfig);
+//        loginWithTwitter.setCallback(new TwitterCallBack());
 
         btn_login.setOnClickListener(v -> submitForm());
         tv_register_link.setOnClickListener(v -> startActivity(new Intent(this, Activity_Register.class)));
@@ -130,7 +130,7 @@ public class Activity_Login extends AppCompatActivity
         progressBar.setVisibility(View.GONE);
         restPassword = findViewById(R.id.restPassword);
         loginWithFacebook = findViewById(R.id.login_with_facebook);
-        loginWithTwitter = findViewById(R.id.login_with_twitter);
+//        loginWithTwitter = findViewById(R.id.login_with_twitter);
 
         // Set the dimensions of the sign-in button.
         loginWithGoogle = findViewById(R.id.login_with_google);
@@ -333,22 +333,22 @@ public class Activity_Login extends AppCompatActivity
         }
     }
 
-    private class TwitterCallBack extends Callback<TwitterSession> {
-
-        @Override
-        public void success(Result<TwitterSession> result) {
-            AuthCredential credential= TwitterAuthProvider.
-                    getCredential(result.data.getAuthToken().token,
-                                    result.data.getAuthToken().secret);
-
-            getPresenter.loginWithTwitter(credential);
-        }
-
-        @Override
-        public void failure(TwitterException exception) {
-
-        }
-    }
+//    private class TwitterCallBack extends Callback<TwitterSession> {
+//
+//        @Override
+//        public void success(Result<TwitterSession> result) {
+//            AuthCredential credential= TwitterAuthProvider.
+//                    getCredential(result.data.getAuthToken().token,
+//                                    result.data.getAuthToken().secret);
+//
+//            getPresenter.loginWithTwitter(credential);
+//        }
+//
+//        @Override
+//        public void failure(TwitterException exception) {
+//
+//        }
+//     }
 
 
 }

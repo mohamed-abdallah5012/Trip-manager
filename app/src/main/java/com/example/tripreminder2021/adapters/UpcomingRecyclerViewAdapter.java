@@ -1,5 +1,8 @@
 package com.example.tripreminder2021.adapters;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -21,11 +24,11 @@ public class UpcomingRecyclerViewAdapter extends RecyclerView.Adapter<UpcomingRe
 
     private ArrayList<TripModel> list;
     private TripModel current;
-    //private Context context;
+    private Context context;
 
-    public UpcomingRecyclerViewAdapter(ArrayList<TripModel> list)
+    public UpcomingRecyclerViewAdapter(ArrayList<TripModel> list,Context context)
     {
-        //this.context=context;
+        this.context=context;
         this.list=list;
     }
     @NonNull
@@ -47,6 +50,15 @@ public class UpcomingRecyclerViewAdapter extends RecyclerView.Adapter<UpcomingRe
         holder.startNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //remove from upcoming
+                //add to history
+
+                Uri gmIntentUri = Uri.parse("google.navigation:q=" + current.getEndloc());
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                context.startActivity(mapIntent);
+
 
             }
         });

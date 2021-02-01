@@ -4,12 +4,15 @@
 
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
 
 
     <application
@@ -31,6 +34,11 @@
 
         <activity android:name=".ui.activities.register.Activity_Register"></activity>
         <activity android:name=".ui.activities.login.Activity_Login" />
+
+        <activity
+            android:name=".zService.MyDialogActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.AppCompat.Dialog.Alert" />
 
         <activity
             android:name=".ui.activities.UpcomingTripsActivity"
@@ -62,6 +70,21 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDhtVSlNM52yj-vH7H7SMEFswg7CtaVCUQ" />
+
+        <service
+            android:name=".zService.DialognotificationService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".zService.AlarmEventReciever"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
 
 
     </application>
