@@ -87,11 +87,23 @@ public class UpcomingRecyclerViewAdapter extends RecyclerView.Adapter<UpcomingRe
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.action_upcoming_view_notes:
+                case R.id.action_upcoming_show_notes:
                     Log.i("TAG", "onMenuItemClick: "+current.getTripname());
                     return true;
-                case R.id.action_upcoming_cancel_note:
+
+                case R.id.action_upcoming_add_notes:
                     Log.i("TAG", "onMenuItemClick: "+current.getDate());
+                    return true;
+                case R.id.action_upcoming_edit_trip:
+                    Log.i("TAG", "onMenuItemClicffk: "+current.getDate());
+                    return true;
+
+                case R.id.action_upcoming_cancel_trip:
+                    Log.i("TAG", "onMenuItemClddick: "+current.getDate());
+                    return true;
+
+                case R.id.action_upcoming_delete_trip:
+                    Log.i("TAG", "onMenuItemClisssck: "+current.getDate());
                     return true;
                 default:
             }

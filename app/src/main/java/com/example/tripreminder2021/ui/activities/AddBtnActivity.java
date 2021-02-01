@@ -1,6 +1,5 @@
 package com.example.tripreminder2021.ui.activities;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -22,12 +21,13 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.tripreminder2021.zService.AlarmEventReciever;
+import com.example.tripreminder2021.AlarmEventReciever;
 import com.example.tripreminder2021.Data.RemoteData.FirebaseDB;
 import com.example.tripreminder2021.R;
 import com.example.tripreminder2021.config.Constants;
 import com.example.tripreminder2021.ui.fragment.DatePickerFragment;
 import com.example.tripreminder2021.ui.fragment.TimePickerFragment;
+import com.example.tripreminder2021.viewModels.UpcomingViewModel;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -51,6 +51,7 @@ import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,8 +62,7 @@ public class AddBtnActivity extends AppCompatActivity
         DatePickerDialog.OnDateSetListener {
     public static final String NEW_TRIP_OBJECT = "NEW_TRIP_OBJECT";
     public static final String NEW_TRIP_OBJ_SERIAL = "NEW_TRIP_OBJECT";
-    public int hours2 = 2;
-    public int minutes2;
+
     @BindView(R.id.add_trip_btn)
     Button addTripBtn;
     @BindView(R.id.cancel_btn)
@@ -89,23 +89,12 @@ public class AddBtnActivity extends AppCompatActivity
     TextInputLayout tripNameTextField;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-    @BindView(R.id.dateEdit_back)
-    TextInputEditText dateEdit_back;
-    @BindView(R.id.clockEdit_back)
-    TextInputEditText clockEdit_back;
-    @BindView(R.id.TextInputTime2)
-    TextInputLayout TextInputTime2;
-    @BindView(R.id.TextInputDate2)
-    TextInputLayout TextInputDate2;
+
     PlacesClient mPlacesClient;
     List<Place.Field> placeField = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
     int hour;
     int minutes;
-    int years2;
-    int months2;
-    int days2;
     int increasedID = 0;
-    int SigleRoundposition = 0;
     ArrayAdapter<CharSequence> adapterTripDirectionSpin;
     ArrayAdapter<CharSequence> adapterTripRepeatSpin;
     List<TextInputLayout> mNotesTextInputLayout = new ArrayList<>();
@@ -117,9 +106,6 @@ public class AddBtnActivity extends AppCompatActivity
     PendingIntent pendingIntent;
 
     Calendar mCalendar;
-    Calendar myCalendarRound;
-    Calendar currentCalendar;
-
 
     FirebaseDB fbdb;
 
@@ -132,9 +118,7 @@ public class AddBtnActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
         mCalendar = Calendar.getInstance();
-        myCalendarRound = Calendar.getInstance();
-        currentCalendar = Calendar.getInstance();
-        // hideProgressBar();
+        hideProgressBar();
 
         //Auto Complete Google
         setUpAutoComplete();
@@ -142,17 +126,19 @@ public class AddBtnActivity extends AppCompatActivity
         //Spinner init
         spinnerInit();
 
+        // add first Note to mNotesTextInputLayout !
         mNotesTextInputLayout.add(noteTextField);
+       // fbdb.saveTripToDatabase(newTrip);
 
     }
 
     private void setUpAutoComplete() {
         AutocompleteSupportFragment placeStartPointAutoComplete;
         AutocompleteSupportFragment placeDestPointAutoComplete;
-        if (!Places.isInitialized()) {
+       if (!Places.isInitialized()) {
             // @TODO Get Places API key
 
-            Places.initialize(getApplicationContext(), "AIzaSyDhtVSlNM52yj-vH7H7SMEFswg7CtaVCUQ");
+           Places.initialize(getApplicationContext(), "AIzaSyDhtVSlNM52yj-vH7H7SMEFswg7CtaVCUQ");
 //            mPlacesClient=Places.createClient(this);     AIzaSyDhtVSlNM52yj-vH7H7SMEFswg7CtaVCUQ
         }
         //Init Frags
@@ -195,8 +181,7 @@ public class AddBtnActivity extends AppCompatActivity
 
     }
 
-    @OnClick({R.id.add_trip_btn, R.id.add_note_btn, R.id.dateTextField,
-            R.id.timeTextField, R.id.cancel_btn, R.id.clockEdit_back, R.id.dateEdit_back})
+    @OnClick({R.id.add_trip_btn, R.id.add_note_btn, R.id.dateTextField, R.id.timeTextField,R.id.cancel_btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.add_trip_btn:
@@ -213,80 +198,24 @@ public class AddBtnActivity extends AppCompatActivity
                 } else if (timeTextField.getText().toString().equals("")) {
                     timeTextField.setError("Cannot be blank!");
                 } else {
+                    TripModel newTrip = new TripModel(selectedStartPlace, selectedEndPlace, dateTextField.getText().toString(),
+                            timeTextField.getText().toString(), tripNameTextField.getEditText().getText().toString(), null, notesList, mCalendar.getTime().toString());
 
 
-                    if (SigleRoundposition == 0) {
-                        dateEdit_back.setVisibility(View.GONE);
-                        clockEdit_back.setVisibility(View.GONE);
-                        TripModel newTrip = new TripModel(selectedStartPlace, selectedEndPlace,
-                                dateTextField.getText().toString(),
-                                timeTextField.getText().toString(),
-                                tripNameTextField.getEditText().getText().toString(),
-                                null, notesList, mCalendar.getTime().toString());
-                        databaseReference = FirebaseDatabase.getInstance().getReference();
-                        databaseReference.child(Constants.TRIP_CHILD_NAME)
-                                .child(Constants.CURRENT_USER_ID)
-                                .push()
-                                .setValue(newTrip);
+                   // fbdb.saveTripToDatabase(newTrip);
 
-                        Intent resultIntent = new Intent();
-                        resultIntent.putExtra("NEWTRIP", newTrip);
-                        startAlarm(newTrip);
-                        setResult(Activity.RESULT_OK, resultIntent);
-                        Toast.makeText(this, "Added Successfully", Toast.LENGTH_SHORT).show();
-                        finish();
+                    databaseReference = FirebaseDatabase.getInstance().getReference();
+                    databaseReference.child(Constants.TRIP_CHILD_NAME)
+                            .child(Constants.CURRENT_USER_ID)
+                            .push()
+                            .setValue(newTrip);
 
-
-                    }
-                    if (SigleRoundposition == 1) {
-
-                        if (myCalendarRound.compareTo(mCalendar) <= 0) {
-                            Toast.makeText(AddBtnActivity.this, "cannot return before going", Toast.LENGTH_SHORT).show();
-                        } else {
-
-                            TripModel newTrip = new TripModel(selectedStartPlace, selectedEndPlace,
-                                    dateTextField.getText().toString(),
-                                    timeTextField.getText().toString(),
-                                    tripNameTextField.getEditText().getText().toString() + " Going",
-                                    null, notesList, mCalendar.getTime().toString());
-                            databaseReference = FirebaseDatabase.getInstance().getReference();
-                            databaseReference.child(Constants.TRIP_CHILD_NAME)
-                                    .child(Constants.CURRENT_USER_ID)
-                                    .push()
-                                    .setValue(newTrip);
-
-
-                            Intent resultIntent = new Intent();
-                            resultIntent.putExtra("NEWTRIP", newTrip);
-                            startAlarm(newTrip);
-                            setResult(Activity.RESULT_OK, resultIntent);
-
-
-                            TripModel TripBack = new TripModel(selectedEndPlace, selectedStartPlace,
-                                    dateEdit_back.getText().toString(),
-                                    clockEdit_back.getText().toString(),
-                                    tripNameTextField.getEditText().getText().toString() + " Back",
-                                    null, notesList, myCalendarRound.getTime().toString());
-                            databaseReference = FirebaseDatabase.getInstance().getReference();
-                            databaseReference.child(Constants.TRIP_CHILD_NAME)
-                                    .child(Constants.CURRENT_USER_ID)
-                                    .push()
-                                    .setValue(TripBack);
-
-                            Intent resultIntentback = new Intent();
-                            resultIntentback.putExtra("TripBack", TripBack);
-                            startAlarmBack(TripBack);
-                            setResult(Activity.RESULT_OK, resultIntentback);
-
-
-                            Toast.makeText(this, "Added Successfully", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-
-
-                    }
-
-
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("NEWTRIP", newTrip);
+                    startAlarm(newTrip);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    Toast.makeText(this, "Added Successfully", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
                 break;
             case R.id.add_note_btn:
@@ -302,80 +231,6 @@ public class AddBtnActivity extends AppCompatActivity
                 DialogFragment timepicker = new TimePickerFragment();
                 timepicker.show(getSupportFragmentManager(), "time");
                 break;
-
-            case R.id.dateEdit_back:
-                //////////////////////////////// round picker ///////////////////////////////////////
-                final DatePickerDialog.OnDateSetListener date1 = new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                          int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        years2 = year;
-                        months2 = monthOfYear;
-                        days2 = dayOfMonth;
-                        myCalendarRound.set(Calendar.YEAR, year);
-                        myCalendarRound.set(Calendar.MONTH, monthOfYear);
-                        myCalendarRound.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                        String myFormat = DateFormat.getDateInstance(DateFormat.FULL).format(myCalendarRound.getTime());
-                        ; //In which you need put here
-                        dateEdit_back.setText(myFormat);
-                    }
-                };
-                new DatePickerDialog(AddBtnActivity.this, date1, currentCalendar
-                        .get(Calendar.YEAR), currentCalendar.get(Calendar.MONTH),
-                        currentCalendar.get(Calendar.DAY_OF_MONTH)).show();
-
-
-                break;
-            case R.id.clockEdit_back:
-                //////////////////////////////// round picker ///////////////////////////////////////
-                Calendar mcurrentTime2 = Calendar.getInstance();
-                int hour = mcurrentTime2.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime2.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker2;
-                mTimePicker2 = new TimePickerDialog(AddBtnActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-
-                        hours2 = selectedHour;
-                        minutes2 = selectedMinute;
-                        String timeSet2 = "";
-                        if (hours2 > 12) {
-                            hours2 -= 12;
-                            timeSet2 = "PM";
-                        } else if (hours2 == 0) {
-                            hours2 += 12;
-                            timeSet2 = "AM";
-                        } else if (hours2 == 12) {
-                            timeSet2 = "PM";
-                        } else {
-                            timeSet2 = "AM";
-                        }
-
-                        String min2 = "";
-                        if (minutes2 < 10)
-                            min2 = "0" + minutes2;
-                        else
-                            min2 = String.valueOf(minutes2);
-
-                        // Append in a StringBuilder
-                        String aTime2 = new StringBuilder().append(hours2).append(':')
-                                .append(min2).append(" ").append(timeSet2).toString();
-                        clockEdit_back.setText(aTime2);
-                        myCalendarRound.set(Calendar.HOUR_OF_DAY, selectedHour);
-                        myCalendarRound.set(Calendar.MINUTE, selectedMinute - 1);
-                        myCalendarRound.set(Calendar.SECOND, 59);
-                    }
-                }, hour, minute, false);
-                mTimePicker2.setTitle("Select Time");
-                mTimePicker2.show();
-
-
-                break;
-
             case R.id.cancel_btn:
                 finish();
                 break;
@@ -390,26 +245,11 @@ public class AddBtnActivity extends AppCompatActivity
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
         Log.i("Date Time Picker", currentDateString);
         dateTextField.setText(currentDateString);
-
         mCalendar.set(Calendar.YEAR, i);
         mCalendar.set(Calendar.MONTH, i1); // Month is zero-based
         mCalendar.set(Calendar.DAY_OF_MONTH, i2);
-//
-//
-//        Calendar c2 = Calendar.getInstance();
-//        c2.set(Calendar.YEAR, i);
-//        c2.set(Calendar.MONTH, i1);
-//        c2.set(Calendar.DAY_OF_MONTH, i2);
-//        String currentDateString2 = DateFormat.getDateInstance(DateFormat.FULL).format(c2.getTime());
-//        Log.i("Date Time Picker", currentDateString);
-//        dateEdit_back.setText(currentDateString2);
-//
-//        myCalendarRound.set(Calendar.YEAR, i);
-//        myCalendarRound.set(Calendar.MONTH, i1); // Month is zero-based
-//        myCalendarRound.set(Calendar.DAY_OF_MONTH, i2);
 
     }
-
 
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
@@ -440,29 +280,15 @@ public class AddBtnActivity extends AppCompatActivity
                 .append(min).append(" ").append(timeSet).toString();
         timeTextField.setText(aTime);
 
-
         // Set calendat item
         mCalendar = Calendar.getInstance();
+
+
         mCalendar.set(Calendar.HOUR_OF_DAY, i);
         mCalendar.set(Calendar.MINUTE, i1);
         mCalendar.set(Calendar.SECOND, 0);
 
-
-//
-//        String aTime2 = new StringBuilder().append(hour).append(':')
-//                .append(min).append(" ").append(timeSet).toString();
-//        clockEdit_back.setText(aTime2);
-//
-//
-//        // Set calendat item
-//        myCalendarRound = Calendar.getInstance();
-//        myCalendarRound.set(Calendar.HOUR_OF_DAY, i);
-//        myCalendarRound.set(Calendar.MINUTE, i1);
-//        myCalendarRound.set(Calendar.SECOND, 0);
-
-
     }
-
 
     private void spinnerInit() {
         //Trip Direction Spinner
@@ -475,25 +301,12 @@ public class AddBtnActivity extends AppCompatActivity
         tripWaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-                Log.d("Spinner", adapterView.getSelectedItemPosition() + "///////");
-
-                SigleRoundposition = adapterView.getSelectedItemPosition();
-                if (SigleRoundposition == 1) {
-
-                    TextInputDate2.setVisibility(View.VISIBLE);
-                    TextInputTime2.setVisibility(View.VISIBLE);
-                }
-                if (SigleRoundposition == 0) {
-
-                    TextInputDate2.setVisibility(View.GONE);
-                    TextInputTime2.setVisibility(View.GONE);
-                }
-
+                Log.i("Spinner", adapterView.getItemAtPosition(pos).toString() + "");
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                SigleRoundposition = 0;
+
             }
         });
 
@@ -526,10 +339,14 @@ public class AddBtnActivity extends AppCompatActivity
         mNotesTextInputLayout.add(noteTextInput);
 
         ImageButton subImgBtn = linearLayout.findViewById(R.id.sub_note_img_btn);
-        subImgBtn.setOnClickListener(v -> {
-            currentParent.removeView(linearLayout);
-            mNotesTextInputLayout.remove(noteTextInput);
+        subImgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentParent.removeView(linearLayout);
+                mNotesTextInputLayout.remove(noteTextInput);
+            }
         });
+
 
 
         currentParent.addView(linearLayout);
@@ -558,46 +375,22 @@ public class AddBtnActivity extends AppCompatActivity
 
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
+        alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent);
     }
 
 
-    private void startAlarmBack(TripModel tripModel) {
-        AlarmManager alarmManager2 = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-//        Log.i("time", mCalendar.getTime().toString());
-//        long alarmTime = mCalendar.getTimeInMillis();
-        Calendar cal2 = Calendar.getInstance();
-        SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-        try {
-            cal2.setTime(sdf2.parse(tripModel.dateTime));// all done
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Intent intent2 = new Intent(this, AlarmEventReciever.class);
-        intent2.putExtra(NEW_TRIP_OBJECT, tripModel);
-
-        Bundle b2 = new Bundle();
-        b2.putSerializable(AddBtnActivity.NEW_TRIP_OBJ_SERIAL, tripModel);
-        intent2.putExtra(NEW_TRIP_OBJECT, b2);
-
-
-        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this, 0, intent2, 0);
-        alarmManager2.set(AlarmManager.RTC_WAKEUP, cal2.getTimeInMillis(), pendingIntent2);
+    private void cancelAlarm() {
+        alarmManager.cancel(pendingIntent);
+        Toast.makeText(getApplicationContext(), "Alarm Cancelled", Toast.LENGTH_LONG).show();
     }
 
 
-//
-//    private void cancelAlarm() {
-//        alarmManager.cancel(pendingIntent);
-//    }
-
-
-//    private void hideProgressBar(){
-//        progressBar.setVisibility(View.VISIBLE);
-//    }
-//    private void showProgressBar(){
-//        progressBar.setVisibility(View.INVISIBLE);
-//    }
+    private void hideProgressBar(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+    private void showProgressBar(){
+        progressBar.setVisibility(View.INVISIBLE);
+    }
 
 
 }

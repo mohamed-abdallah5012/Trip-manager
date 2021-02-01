@@ -4,16 +4,24 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.tripreminder2021.pojo.TripModel;
+import com.example.tripreminder2021.repository.HistoryRepository;
+import com.example.tripreminder2021.repository.UpcomingRepository;
+
+import java.util.ArrayList;
+
 public class HistoryViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    private MutableLiveData<ArrayList<TripModel>> tripList;
 
-    public HistoryViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is the history");
+    public void init()
+    {
+        if (tripList!=null)
+            return;
+        tripList= HistoryRepository.getInstance().getHistoryTrips();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public MutableLiveData<ArrayList<TripModel>> getHistoryTrips() {
+        return tripList;
     }
 }
