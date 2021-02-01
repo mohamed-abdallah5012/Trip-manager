@@ -25,9 +25,9 @@ import com.example.tripreminder2021.AlarmEventReciever;
 import com.example.tripreminder2021.Data.RemoteData.FirebaseDB;
 import com.example.tripreminder2021.R;
 import com.example.tripreminder2021.config.*;
+import com.example.tripreminder2021.repository.FirebaseDatabaseServices;
 import com.example.tripreminder2021.ui.fragment.DatePickerFragment;
 import com.example.tripreminder2021.ui.fragment.TimePickerFragment;
-import com.example.tripreminder2021.viewModels.UpcomingViewModel;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -38,7 +38,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.example.tripreminder2021.pojo.TripModel;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -51,7 +50,6 @@ import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -199,7 +197,7 @@ public class AddBtnActivity extends AppCompatActivity
                     timeTextField.setError("Cannot be blank!");
                 } else {
 
-                    TripModel newTrip = new TripModel(selectedStartPlace, selectedEndPlace,
+                    TripModel newTrip = new TripModel("1",selectedStartPlace, selectedEndPlace,
                             dateTextField.getText().toString(),
                             timeTextField.getText().toString(),
                             tripNameTextField.getEditText().getText().toString()
@@ -207,11 +205,9 @@ public class AddBtnActivity extends AppCompatActivity
                             Constants.SEARCH_CHILD_UPCOMING_KEY);
 
 
-                    databaseReference = FirebaseDatabase.getInstance().getReference();
-                    databaseReference.child(Constants.TRIP_CHILD_NAME)
-                            .child(Constants.CURRENT_USER_ID)
-                            .push()
-                            .setValue(newTrip);
+                    FirebaseDatabaseServices firebaseDatabaseServices=new FirebaseDatabaseServices();
+
+                    firebaseDatabaseServices.addTrip(newTrip);
 
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("NEWTRIP", newTrip);
@@ -219,6 +215,7 @@ public class AddBtnActivity extends AppCompatActivity
                     setResult(Activity.RESULT_OK, resultIntent);
                     Toast.makeText(this, "Added Successfully", Toast.LENGTH_SHORT).show();
                     finish();
+
                 }
                 break;
             case R.id.add_note_btn:
@@ -373,7 +370,7 @@ public class AddBtnActivity extends AppCompatActivity
         intent.putExtra(NEW_TRIP_OBJECT, tripModel);
 
         Bundle b = new Bundle();
-        b.putSerializable(AddBtnActivity.NEW_TRIP_OBJ_SERIAL, tripModel);
+        b.putParcelable(AddBtnActivity.NEW_TRIP_OBJ_SERIAL, tripModel);
         intent.putExtra(NEW_TRIP_OBJECT, b);
 
 

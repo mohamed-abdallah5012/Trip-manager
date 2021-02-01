@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.tripreminder2021.config.SharedPreferencesManager;
 import com.example.tripreminder2021.ui.activities.login.Activity_Login;
@@ -49,8 +51,15 @@ public class UpcomingTripsActivity extends AppCompatActivity {
             }
         });
 
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        View header=navigationView.getHeaderView(0);
+        TextView userMail = header.findViewById(R.id.user_email);
+        userMail.setText(sharedPreferencesManager.getUSerData()[0]);
+
+
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

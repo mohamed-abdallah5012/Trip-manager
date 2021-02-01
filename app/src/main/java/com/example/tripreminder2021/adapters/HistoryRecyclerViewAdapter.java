@@ -1,4 +1,9 @@
 package com.example.tripreminder2021.adapters;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -12,16 +17,23 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tripreminder2021.R;
 import com.example.tripreminder2021.pojo.TripModel;
+import com.example.tripreminder2021.repository.FirebaseDatabaseServices;
+
 import java.util.ArrayList;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder>{
 
     private ArrayList<TripModel> list;
     private TripModel current;
+    private Context context;
+    FirebaseDatabaseServices firebaseDatabaseServices;
 
-    public HistoryRecyclerViewAdapter(ArrayList<TripModel> list)
+    public HistoryRecyclerViewAdapter(Context context,ArrayList<TripModel> list)
     {
+        this.context=context;
         this.list=list;
+        firebaseDatabaseServices=new FirebaseDatabaseServices();
+
     }
     @NonNull
     @Override
@@ -53,27 +65,21 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         androidx.appcompat.widget.PopupMenu popup = new PopupMenu(view.getContext(),view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.history_menu, popup.getMenu());
-        popup.setOnMenuItemClickListener(new HistoryRecyclerViewAdapter.MyMenuItemClickListener());
-        popup.show();
-    }
-
-    class MyMenuItemClickListener implements androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener {
-
-        public MyMenuItemClickListener() {
-        }
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
+        popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.action_history_view_notes:
-                    Log.i("TAG", "onMenuItemClick: "+current.getTripname());
+                    //current.getNotes();
+                    Log.i("TAG", "onMenuItemClick: " + current.getTripname());
                     return true;
                 case R.id.action_history_delete_note:
-                    Log.i("TAG", "onMenuItemClick: "+current.getDate());
+                    showDeleteAlertDialog(current.getTrip_id());
+                    Log.i("TAG", "onMenuItemClick: " + current.getDate());
                     return true;
                 default:
             }
             return false;
-        }
+        });
+        popup.show();
     }
 
     @Override
@@ -81,6 +87,29 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         return list.size();
     }
 
+    private void showDeleteAlertDialog(String trip_id)
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage("Sure you want to delete the trip");
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        firebaseDatabaseServices.deleteTrip(trip_id);
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                    }
+                });
+
+        //Showing the alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tripName;

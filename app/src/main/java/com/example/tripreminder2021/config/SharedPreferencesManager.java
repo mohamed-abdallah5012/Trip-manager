@@ -67,7 +67,7 @@ public class SharedPreferencesManager {
     public String [] getUSerData() {
         String [] userData = new String[2];
         String email=pref.getString(EMAIL_SHARED_PREF,"email");
-        String password=pref.getString(PASSWORD_SHARED_PREF,"email");
+        String password=pref.getString(PASSWORD_SHARED_PREF,"pass");
         userData[0]=email;
         userData[1]=password;
         return userData;
