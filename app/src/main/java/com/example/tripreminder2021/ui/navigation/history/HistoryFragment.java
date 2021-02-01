@@ -41,7 +41,7 @@ public class HistoryFragment extends Fragment {
         historyViewModel.getHistoryTrips().observe(getViewLifecycleOwner(),
                 list -> recyclerViewAdapter.notifyDataSetChanged());
 
-        recyclerViewAdapter = new HistoryRecyclerViewAdapter(historyViewModel.getHistoryTrips().getValue());
+        recyclerViewAdapter = new HistoryRecyclerViewAdapter(getContext(),historyViewModel.getHistoryTrips().getValue());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(root.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(recyclerViewAdapter);

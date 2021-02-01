@@ -107,29 +107,23 @@ public class LoginPresenter implements ILoginContract.Presenter{
 
     @Override
     public void loginWithTwitter(AuthCredential credential) {
-       /*toLoginView.onShowProgressBar(true);
+       toLoginView.onShowProgressBar(true);
        firebaseAuth.signInWithCredential(credential).
                addOnCompleteListener((Activity) context, task -> {
-
                    if (task.isSuccessful())
                    {
-
                        FirebaseUser user = firebaseAuth.getCurrentUser();
                        User twitterUser=new User(user.getDisplayName(),user.getEmail(),"Login using twitter");
                        databaseReference.child(Constants.USER_CHILD_NAME).child(user.getUid()).
                                setValue(twitterUser);
-
                        doAfterLoginSuccess();
                    }
                    else {
                        toLoginView.onLoginError(task.getException().getMessage());
                    }
                    toLoginView.onShowProgressBar(false);
-
                });
-               */
     }
-
     @Override
     public void restPassword(String email) {
         toLoginView.onShowProgressBar(true);

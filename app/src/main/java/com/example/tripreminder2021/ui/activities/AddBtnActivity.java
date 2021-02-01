@@ -26,6 +26,7 @@ import com.example.tripreminder2021.zService.AlarmEventReciever;
 import com.example.tripreminder2021.Data.RemoteData.FirebaseDB;
 import com.example.tripreminder2021.R;
 import com.example.tripreminder2021.config.*;
+import com.example.tripreminder2021.repository.FirebaseDatabaseServices;
 import com.example.tripreminder2021.ui.fragment.DatePickerFragment;
 import com.example.tripreminder2021.ui.fragment.TimePickerFragment;
 import com.google.android.gms.common.api.Status;
@@ -38,7 +39,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.example.tripreminder2021.pojo.TripModel;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -291,6 +291,7 @@ public class AddBtnActivity extends AppCompatActivity
 
                     }
 
+
                 }
                 break;
             case R.id.add_note_btn:
@@ -398,19 +399,7 @@ public class AddBtnActivity extends AppCompatActivity
         mCalendar.set(Calendar.YEAR, i);
         mCalendar.set(Calendar.MONTH, i1); // Month is zero-based
         mCalendar.set(Calendar.DAY_OF_MONTH, i2);
-//
-//
-//        Calendar c2 = Calendar.getInstance();
-//        c2.set(Calendar.YEAR, i);
-//        c2.set(Calendar.MONTH, i1);
-//        c2.set(Calendar.DAY_OF_MONTH, i2);
-//        String currentDateString2 = DateFormat.getDateInstance(DateFormat.FULL).format(c2.getTime());
-//        Log.i("Date Time Picker", currentDateString);
-//        dateEdit_back.setText(currentDateString2);
-//
-//        myCalendarRound.set(Calendar.YEAR, i);
-//        myCalendarRound.set(Calendar.MONTH, i1); // Month is zero-based
-//        myCalendarRound.set(Calendar.DAY_OF_MONTH, i2);
+
 
     }
 
@@ -544,7 +533,7 @@ public class AddBtnActivity extends AppCompatActivity
         intent.putExtra(NEW_TRIP_OBJECT, (Serializable) tripModel);
 
         Bundle b = new Bundle();
-        b.putSerializable(AddBtnActivity.NEW_TRIP_OBJ_SERIAL, tripModel);
+        b.putParcelable(AddBtnActivity.NEW_TRIP_OBJ_SERIAL, tripModel);
         intent.putExtra(NEW_TRIP_OBJECT, b);
 
 
@@ -577,18 +566,7 @@ public class AddBtnActivity extends AppCompatActivity
     }
 
 
-//
-//    private void cancelAlarm() {
-//        alarmManager.cancel(pendingIntent);
-//    }
 
-
-//    private void hideProgressBar(){
-//        progressBar.setVisibility(View.VISIBLE);
-//    }
-//    private void showProgressBar(){
-//        progressBar.setVisibility(View.INVISIBLE);
-//    }
 
 
 }
