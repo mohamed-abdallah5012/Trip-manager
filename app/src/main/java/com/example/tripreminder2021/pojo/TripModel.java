@@ -7,7 +7,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TripModel implements Parcelable {
+
+public class TripModel implements Parcelable,Serializable{
+
 
     protected TripModel(Parcel in) {
         startloc = in.readString();
@@ -181,4 +183,6 @@ public class TripModel implements Parcelable {
         dest.writeString(include_in);
         dest.writeStringList(notes);
     }
+
 }
+

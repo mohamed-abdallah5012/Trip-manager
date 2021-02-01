@@ -1,10 +1,16 @@
 package com.example.tripreminder2021.adapters;
 
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -30,11 +36,15 @@ import java.util.ArrayList;
 public class UpcomingRecyclerViewAdapter extends RecyclerView.Adapter<UpcomingRecyclerViewAdapter.ViewHolder>{
 
     private ArrayList<TripModel> list;
+
     private TripModel currentTrip;
     private Context context;
     FirebaseDatabaseServices firebaseDatabaseServices;
 
-    public UpcomingRecyclerViewAdapter(Context context,ArrayList<TripModel> list)
+   
+
+    public UpcomingRecyclerViewAdapter(ArrayList<TripModel> list,Context context)
+
     {
         this.context=context;
         this.list=list;
@@ -59,6 +69,15 @@ public class UpcomingRecyclerViewAdapter extends RecyclerView.Adapter<UpcomingRe
         holder.startNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //remove from upcoming
+                //add to history
+
+                Uri gmIntentUri = Uri.parse("google.navigation:q=" + current.getEndloc());
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                context.startActivity(mapIntent);
+
 
             }
         });

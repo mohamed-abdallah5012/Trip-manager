@@ -48,7 +48,9 @@ public class UpcomingFragment extends Fragment {
             }
         });
 
+
         recyclerViewAdapter = new UpcomingRecyclerViewAdapter(getContext(),upcomingViewModel.getUpcomingTrips().getValue());
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(root.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(recyclerViewAdapter);
