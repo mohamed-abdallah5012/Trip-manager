@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.navigation.report.ReportFragment">
+
+
+    <EditText
+        android:id="@+id/editTextDate1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="#d4d4d4"
+        android:hint="Select Date..."
+        android:padding="15dp"
+        android:textColor="#897"
+        android:textColorHint="#090"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:ems="10"
+        android:inputType="datetime"
+        app:layout_constraintBottom_toTopOf="@+id/editTextDate2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextDate2"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="#d4d4d4"
+        android:hint="Select Date..."
+        android:padding="15dp"
+        android:textColor="#897"
+        android:textColorHint="#090"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:ems="10"
+        android:inputType="datetime"
+        app:layout_constraintBottom_toTopOf="@+id/textViewtest"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDate1" />
+
+    <Button
+        android:id="@+id/showReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="show_report"
+        app:layout_constraintBottom_toTopOf="@+id/textViewtest"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDate2" />
+
+    <TextView
+        android:id="@+id/textViewtest"
+        android:layout_width="300dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/showReport" />
+</androidx.constraintlayout.widget.ConstraintLayout>

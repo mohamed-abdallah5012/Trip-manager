@@ -19,10 +19,14 @@ import android.widget.Toast;
 
 import com.example.tripreminder2021.R;
 import com.example.tripreminder2021.pojo.TripModel;
+import com.example.tripreminder2021.pojo.TripStatus;
+import com.example.tripreminder2021.repository.FirebaseDatabaseServices;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+
+import java.io.Serializable;
 
 import static com.example.tripreminder2021.zService.AlarmEventReciever.RECEIVED_TRIP;
 import static com.example.tripreminder2021.zService.AlarmEventReciever.RECEIVED_TRIP_SEND_SERIAL;
@@ -34,12 +38,17 @@ public class MyDialogActivity extends Activity {
     AlertDialog alertDialog;
     android.app.AlertDialog alert;
 
+    private FirebaseDatabaseServices firebaseDatabaseServices;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_my_dialog);
+
+        firebaseDatabaseServices=new FirebaseDatabaseServices();
 
 
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -65,8 +74,8 @@ public class MyDialogActivity extends Activity {
                         Toast.makeText(MyDialogActivity.this, "Trip Will Start", Toast.LENGTH_SHORT).show();
                         tm.setStatus("Done!");
 
-//                            addTripToHistory(tm);
-//                            removeFromUpcoming(tm);
+                        firebaseDatabaseServices.addTripToHistory(tm.getTrip_id());
+                        firebaseDatabaseServices.changeTripStatus(tm.getTrip_id(), TripStatus.Done);
 
                         Uri gmmIntentUri = Uri.parse("google.navigation:q=" + tm.getEndloc());
                         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
@@ -83,8 +92,8 @@ public class MyDialogActivity extends Activity {
                             Toast.makeText(MyDialogActivity.this, "Trip Canceled", Toast.LENGTH_SHORT).show();
                             tm.setStatus("Canceled!");
 
-//                            addTripToHistory(tm);
-//                            removeFromUpcoming(tm);
+                            firebaseDatabaseServices.addTripToHistory(tm.getTrip_id());
+                            firebaseDatabaseServices.changeTripStatus(tm.getTrip_id(),TripStatus.Canceled);
 
                             stopAlarmRingTone(r);
                             alertDialog.dismiss();
@@ -104,7 +113,7 @@ public class MyDialogActivity extends Activity {
     public void startDialogService(TripModel tm) {
         Intent service = new Intent(this, DialognotificationService.class);
 
-        service.putExtra(RECEIVED_TRIP_SEND_SERIAL, tm);
+        service.putExtra(RECEIVED_TRIP_SEND_SERIAL, (Serializable) tm);
         service.putExtra("test", "MEMO");
         startService(service);
         bindService(service, mServiceConnection, BIND_ADJUST_WITH_ACTIVITY);
@@ -181,7 +190,5 @@ public class MyDialogActivity extends Activity {
         alert = alertBuilder.create();
         alert.show();
     }
-
-
 
 }

@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 
 import android.util.Log;
@@ -28,8 +26,6 @@ import com.example.tripreminder2021.pojo.TripModel;
 import com.example.tripreminder2021.pojo.TripStatus;
 import com.example.tripreminder2021.repository.FirebaseDatabaseServices;
 import com.example.tripreminder2021.ui.activities.AddBtnActivity;
-import com.example.tripreminder2021.ui.navigation.Home.UpcomingFragment;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -37,14 +33,11 @@ public class UpcomingRecyclerViewAdapter extends RecyclerView.Adapter<UpcomingRe
 
     private ArrayList<TripModel> list;
 
-    private TripModel currentTrip;
+    //private TripModel currentTrip;
     private Context context;
     FirebaseDatabaseServices firebaseDatabaseServices;
 
-   
-
     public UpcomingRecyclerViewAdapter(ArrayList<TripModel> list,Context context)
-
     {
         this.context=context;
         this.list=list;
@@ -56,41 +49,30 @@ public class UpcomingRecyclerViewAdapter extends RecyclerView.Adapter<UpcomingRe
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.upcoming_card_row,parent,false);
         return new ViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        currentTrip = list.get(position);
+        final TripModel currentTrip = list.get(position);
 
         holder.tripName.setText(currentTrip.getTripname());
         holder.startLoc.setText(currentTrip.getStartloc());
         holder.endLoc.setText(currentTrip.getEndloc());
         holder.time.setText(currentTrip.getTime());
         holder.date.setText(currentTrip.getDate());
-        holder.startNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.startNow.setOnClickListener(v -> {
 
-                //remove from upcoming
-                //add to history
+            firebaseDatabaseServices.addTripToHistory(currentTrip.getTrip_id());
+            firebaseDatabaseServices.changeTripStatus(currentTrip.getTrip_id(),TripStatus.Done);
 
-                Uri gmIntentUri = Uri.parse("google.navigation:q=" + current.getEndloc());
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                context.startActivity(mapIntent);
-
-
-            }
+            Uri gmIntentUri = Uri.parse("google.navigation:q=" + currentTrip.getEndloc());
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            context.startActivity(mapIntent);
         });
 
-        holder.popMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPopupMenu(holder.popMenu);
-            }
-        });
+        holder.popMenu.setOnClickListener(view -> showPopupMenu(holder.popMenu,currentTrip));
 
     }
-    private void showPopupMenu(View view) {
+    private void showPopupMenu(View view,TripModel currentTrip) {
         // inflate menu
         androidx.appcompat.widget.PopupMenu popup = new PopupMenu(view.getContext(),view);
         MenuInflater inflater = popup.getMenuInflater();
@@ -101,13 +83,11 @@ public class UpcomingRecyclerViewAdapter extends RecyclerView.Adapter<UpcomingRe
                 switch (item.getItemId()) {
                     case R.id.action_upcoming_show_notes:
                         //currentTrip.getNotes();
-                        Log.i("TAG", "onMenuItemClick: "+currentTrip.getTripname());
                         return true;
 
                     case R.id.action_upcoming_add_notes:
 
                         firebaseDatabaseServices.updateNotes(currentTrip.getTrip_id(),currentTrip.getNotes());
-                        Log.i("TAG", "onMenuItemClick: "+currentTrip.getDate());
                         return true;
 
                     case R.id.action_upcoming_edit_trip:
@@ -121,6 +101,7 @@ public class UpcomingRecyclerViewAdapter extends RecyclerView.Adapter<UpcomingRe
                         return true;
 
                     case R.id.action_upcoming_delete_trip:
+
                         showDeleteAlertDialog(currentTrip.getTrip_id());
                         return true;
 
@@ -171,23 +152,20 @@ public class UpcomingRecyclerViewAdapter extends RecyclerView.Adapter<UpcomingRe
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setMessage("Sure you want to delete the trip");
         alertDialogBuilder.setPositiveButton("Yes",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        firebaseDatabaseServices.deleteTrip(trip_id);
-                    }
-                });
+                (arg0, arg1) -> firebaseDatabaseServices.deleteTrip(trip_id));
 
         alertDialogBuilder.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                    }
+                (arg0, arg1) -> {
                 });
 
         //Showing the alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+    public void setData(ArrayList<TripModel> list)
+    {
+        this.list=list;
+        notifyDataSetChanged();
     }
 
 }

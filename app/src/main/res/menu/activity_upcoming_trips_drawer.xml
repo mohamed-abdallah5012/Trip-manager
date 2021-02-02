@@ -22,5 +22,11 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
             android:title="@string/logout" />
+
+        <item
+            android:id="@+id/nav_report"
+            android:icon="@drawable/side_nav_bar"
+            android:title="@string/Reports"/>
+
     </group>
 </menu>
