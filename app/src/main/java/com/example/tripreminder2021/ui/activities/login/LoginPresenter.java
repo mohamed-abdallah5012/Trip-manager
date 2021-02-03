@@ -28,7 +28,6 @@ public class LoginPresenter implements ILoginContract.Presenter{
     SharedPreferencesManager sharedPreferencesManager;
 
 
-
     public  LoginPresenter(ILoginContract.View toLoginView, Context context){
         this.toLoginView =toLoginView;
         this.context=context;
@@ -141,12 +140,14 @@ public class LoginPresenter implements ILoginContract.Presenter{
 
     private void doAfterLoginSuccess()
     {
-        sharedPreferencesManager.setUserID(firebaseAuth.getCurrentUser().getUid());
-        Log.i("TAG", "sharedPreferencesManager: "+sharedPreferencesManager.getUserID());
+        sharedPreferencesManager.setUserLogin(true);
+        sharedPreferencesManager.setCurrentUserID(firebaseAuth.getCurrentUser().getUid());
+        sharedPreferencesManager.setCurrentUserEmail(firebaseAuth.getCurrentUser().getEmail());
+        Log.i("TAG", "sharedPreferencesManager: "+sharedPreferencesManager.getCurrentUserId());
+        Log.i("TAG", "sharedPreferencesManager: "+sharedPreferencesManager.getCurrentUserEmail());
         Constants.CURRENT_USER_ID=firebaseAuth.getCurrentUser().getUid();
         Log.i("TAG", "constant: "+Constants.CURRENT_USER_ID);
 
         toLoginView.onLoginSuccess();
-        sharedPreferencesManager.setIsUserLogin(true);
     }
 }

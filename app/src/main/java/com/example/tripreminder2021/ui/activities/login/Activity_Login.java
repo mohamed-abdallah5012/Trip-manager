@@ -8,27 +8,32 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tripreminder2021.R;
+import com.example.tripreminder2021.config.Constants;
 import com.example.tripreminder2021.config.SharedPreferencesManager;
 import com.example.tripreminder2021.dataValidation.DataValidator;
 import com.example.tripreminder2021.dataValidation.ValidationServices;
 import com.example.tripreminder2021.ui.activities.UpcomingTripsActivity;
 import com.example.tripreminder2021.ui.activities.register.Activity_Register;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -48,6 +53,9 @@ import com.google.firebase.auth.FacebookAuthProvider;
 //import com.twitter.sdk.android.core.TwitterException;
 //import com.twitter.sdk.android.core.TwitterSession;
 //import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 
 public class Activity_Login extends AppCompatActivity
         implements ILoginContract.View,DataValidator.View {
@@ -58,9 +66,12 @@ public class Activity_Login extends AppCompatActivity
     private Button btn_login;
     private TextView tv_register_link;
     private TextView restPassword;
-    private CheckBox checkBox;
+    private Switch aSwitch;
     private ProgressBar progressBar;
     // facebook google twitter
+
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private AccessTokenTracker accessTokenTracker;
     private LoginButton loginWithFacebook;
     private CallbackManager callbackManager;
     private SignInButton loginWithGoogle;
@@ -68,7 +79,7 @@ public class Activity_Login extends AppCompatActivity
 
    // private TwitterLoginButton loginWithTwitter;
     // shared preference
-    private SharedPreferencesManager sharedPreferencesManager;
+    private SharedPreferencesManager sharedPreferencesManager ;
     // interface
     private ILoginContract.Presenter getPresenter;
     private DataValidator.Presenter getValidator;
@@ -81,6 +92,14 @@ public class Activity_Login extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sharedPreferencesManager=new SharedPreferencesManager(this);
+        //sharedPreferencesManager.setUserLogin(false);
+        if (sharedPreferencesManager.isUserLogin()) {
+            Intent intent = new Intent(Activity_Login.this, UpcomingTripsActivity.class);
+            startActivity(intent);
+        }
+
         setContentView(R.layout.activity__login);
 
         initViews();
@@ -88,19 +107,52 @@ public class Activity_Login extends AppCompatActivity
         getValidator = new ValidationServices(this, this);
 
         // Configure Google Sign In
-//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestIdToken(getString(R.string.default_web_client_id))
-//                .requestEmail()
-//                .build();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
-      //  mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         loginWithGoogle.setOnClickListener(v -> {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent, 100);
         });
 
+        // configure facebook
+
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        //AppEventsLogger.activateApp(this);
+
         callbackManager = CallbackManager.Factory.create();
         loginWithFacebook.registerCallback(callbackManager,new FacebookCallBack());
+
+
+        authStateListener= firebaseAuth -> {
+
+            FirebaseUser firebaseUser=firebaseAuth.getCurrentUser();
+            if(firebaseUser!=null)
+            {
+                sharedPreferencesManager.setUserLogin(true);
+                sharedPreferencesManager.setCurrentUserID(firebaseUser.getUid());
+                sharedPreferencesManager.setCurrentUserEmail(firebaseUser.getEmail());
+            }
+            else
+            {
+                sharedPreferencesManager.setUserLogin(false);
+            }
+
+        };
+        accessTokenTracker=new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                if (currentAccessToken==null)
+                {
+                    FirebaseAuth.getInstance().signOut();
+                    sharedPreferencesManager.setUserLogin(false);
+                }
+            }
+        };
 
 //
 //        TwitterAuthConfig config =new TwitterAuthConfig(getString(R.string.twitter_api_key),
@@ -113,7 +165,7 @@ public class Activity_Login extends AppCompatActivity
         btn_login.setOnClickListener(v -> submitForm());
         tv_register_link.setOnClickListener(v -> startActivity(new Intent(this, Activity_Register.class)));
         restPassword.setOnClickListener(v -> initializeDialog());
-        checkBox.setOnClickListener(view -> saveUserData());
+        aSwitch.setOnClickListener(view -> saveUserData());
     }
 
     private void initViews() {
@@ -123,7 +175,7 @@ public class Activity_Login extends AppCompatActivity
         inputLayoutPassword = findViewById(R.id.input_layout_login_password);
         btn_login = findViewById(R.id.btn_login);
         tv_register_link = findViewById(R.id.tv_reg_link);
-        checkBox = (findViewById(R.id.activity_login_checkBox));
+        aSwitch = (findViewById(R.id.remember_switch));
         progressBar = findViewById(R.id.login_progress);
         progressBar.setVisibility(View.GONE);
         restPassword = findViewById(R.id.restPassword);
@@ -133,20 +185,22 @@ public class Activity_Login extends AppCompatActivity
         // Set the dimensions of the sign-in button.
         loginWithGoogle = findViewById(R.id.login_with_google);
         loginWithGoogle.setSize(SignInButton.SIZE_STANDARD);
-
     }
 
     private void saveUserData() {
-        if (checkBox.isChecked()) {
+        if (aSwitch.isChecked()) {
             sharedPreferencesManager.setUserData(mEmailView.getText().toString(), mPasswordView.getText().toString());
+            sharedPreferencesManager.setUserDataSaved(true);
         }
+        else if(!aSwitch.isChecked())
+            sharedPreferencesManager.setUserDataSaved(false);
     }
 
     private void getUserData() {
         String[] array = sharedPreferencesManager.getUSerData();
         mEmailView.setText(array[0]);
         mPasswordView.setText(array[1]);
-        checkBox.setChecked(true);
+        aSwitch.setChecked(false);
     }
 
     private void submitForm() {
@@ -176,15 +230,32 @@ public class Activity_Login extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        super.onStart();
-        sharedPreferencesManager = new SharedPreferencesManager(this);
-        if (sharedPreferencesManager.isUserLogin()) {
-            Intent intent = new Intent(Activity_Login.this, UpcomingTripsActivity.class);
-            startActivity(intent);
-        }
+
         if (sharedPreferencesManager.isUserDataSaved()) {
             getUserData();
         }
+        if (sharedPreferencesManager.isUserLogin())
+        {
+            Log.i("TAG", "onStart: "+ FirebaseAuth.getInstance().getCurrentUser().getUid());
+            Log.i("TAG", "onStart: "+ FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+
+            Constants.CURRENT_USER_ID=FirebaseAuth.getInstance().getCurrentUser().getUid();
+            Constants.CURRENT_USER_EMAIL=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
+            Log.i("TAG", "onStart Constants: "+ Constants.CURRENT_USER_ID);
+            Log.i("TAG", "onStart Constants: "+ Constants.CURRENT_USER_EMAIL);
+
+        }
+        FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
+        super.onStart();
+    }
+    @Override
+    protected void onStop() {
+        if(authStateListener!=null)
+        {
+            FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
+        }
+        super.onStop();
     }
 
     @SuppressLint("ResourceType")
@@ -203,8 +274,8 @@ public class Activity_Login extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == 100) {

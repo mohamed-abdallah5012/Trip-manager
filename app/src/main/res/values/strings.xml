@@ -5,6 +5,9 @@
     <string name="facebook_app_id">3024190001138320</string>
     <string name="fb_login_protocol_scheme">fb3024190001138320</string>
 
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDuuLYz0Rbfcp6Em7lDI9mWW8PDIjsQq_s</string>
+
+
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
     <string name="start">GOT IT</string>
@@ -58,6 +61,8 @@
     <string name="cancel_trip">cancel trip</string>
     <string name="menu_slideshow">Logout</string>
     <string name="language">language</string>
+    <string name="Reports">Your Reports</string>
+    <string name="draw_on_map">Show Me On Maps</string>
 
 
     <string-array name="times_array">
@@ -71,7 +76,7 @@
         <item>One way Trip</item>
         <item>Round Trip</item>
     </string-array>
-
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>

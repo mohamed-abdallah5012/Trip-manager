@@ -20,6 +20,7 @@ import com.example.tripreminder2021.pojo.TripModel;
 import com.example.tripreminder2021.repository.FirebaseDatabaseServices;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder>{
 
@@ -27,13 +28,11 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     private TripModel current;
     private Context context;
     FirebaseDatabaseServices firebaseDatabaseServices;
-
     public HistoryRecyclerViewAdapter(Context context,ArrayList<TripModel> list)
     {
         this.context=context;
         this.list=list;
         firebaseDatabaseServices=new FirebaseDatabaseServices();
-
     }
     @NonNull
     @Override
@@ -53,12 +52,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         holder.date.setText(current.getDate());
         holder.status.setText(current.getStatus());
 
-        holder.popMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPopupMenu(holder.popMenu);
-            }
-        });
+        holder.popMenu.setOnClickListener(view -> showPopupMenu(holder.popMenu));
     }
     private void showPopupMenu(View view) {
         // inflate menu
@@ -92,18 +86,10 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setMessage("Sure you want to delete the trip");
         alertDialogBuilder.setPositiveButton("Yes",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        firebaseDatabaseServices.deleteTrip(trip_id);
-                    }
-                });
+                (arg0, arg1) -> firebaseDatabaseServices.deleteTrip(trip_id));
 
         alertDialogBuilder.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                    }
+                (arg0, arg1) -> {
                 });
 
         //Showing the alert dialog
@@ -131,5 +117,14 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             date=itemView.findViewById(R.id.Date_id);
             status=itemView.findViewById(R.id.status);
         }
+    }
+    public void setData(ArrayList<TripModel> list)
+    {
+        this.list=list;
+        notifyDataSetChanged();
+    }
+    public ArrayList<TripModel> getData()
+    {
+        return this.list;
     }
 }

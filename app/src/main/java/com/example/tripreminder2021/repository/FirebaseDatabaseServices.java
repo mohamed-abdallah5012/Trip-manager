@@ -1,5 +1,4 @@
 package com.example.tripreminder2021.repository;
-
 import com.example.tripreminder2021.pojo.TripModel;
 import com.example.tripreminder2021.pojo.TripStatus;
 

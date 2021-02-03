@@ -69,14 +69,13 @@ public class UpcomingTripsActivity extends AppCompatActivity {
 
         View header=navigationView.getHeaderView(0);
         TextView userMail = header.findViewById(R.id.user_email);
-        userMail.setText(sharedPreferencesManager.getUSerData()[0]);
-
+        userMail.setText(sharedPreferencesManager.getCurrentUserEmail());
 
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_sync, R.id.nav_logout)
+                R.id.nav_home, R.id.nav_sync, R.id.nav_logout,R.id.nav_report)
                 .setDrawerLayout(drawer)
                 .build();
 
@@ -112,7 +111,7 @@ public class UpcomingTripsActivity extends AppCompatActivity {
                    // signOut() method here
                     FirebaseAuth.getInstance().signOut();
                     Log.i("TAG", "logouthhhhhhhhht"+FirebaseAuth.getInstance().getCurrentUser());
-                    sharedPreferencesManager.setIsUserLogin(false);
+                    sharedPreferencesManager.setUserLogin(false);
                     drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     Intent mainIntent = new Intent(UpcomingTripsActivity.this, Activity_Login.class);
                     startActivity(mainIntent);
@@ -126,10 +125,17 @@ public class UpcomingTripsActivity extends AppCompatActivity {
                     return true;
                 } else if (menuItem.getItemId() == R.id.nav_history) {
                     //Navigation here
-                    fab.hide();
+                    //fab.hide();
                     navController.navigate(R.id.action_HomeFragment_to_History);
                     drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     return true;
+                }
+                else if(menuItem.getItemId()==R.id.nav_report)
+                {
+                    navController.navigate(R.id.nav_report);
+                    drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    return true;
+
                 }
 
                 return true;

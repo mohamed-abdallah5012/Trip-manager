@@ -22,11 +22,10 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.tripreminder2021.repository.FirebaseDatabaseServices;
 import com.example.tripreminder2021.zService.AlarmEventReciever;
-import com.example.tripreminder2021.Data.RemoteData.FirebaseDB;
 import com.example.tripreminder2021.R;
 import com.example.tripreminder2021.config.*;
-import com.example.tripreminder2021.repository.FirebaseDatabaseServices;
 import com.example.tripreminder2021.ui.fragment.DatePickerFragment;
 import com.example.tripreminder2021.ui.fragment.TimePickerFragment;
 import com.google.android.gms.common.api.Status;
@@ -40,6 +39,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.example.tripreminder2021.pojo.TripModel;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -121,11 +121,8 @@ public class AddBtnActivity extends AppCompatActivity
     Calendar mCalendar;
     Calendar myCalendarRound;
     Calendar currentCalendar;
+    private FirebaseDatabaseServices firebaseDatabaseServices;
 
-
-    FirebaseDB fbdb;
-
-    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +134,8 @@ public class AddBtnActivity extends AppCompatActivity
         myCalendarRound = Calendar.getInstance();
         currentCalendar = Calendar.getInstance();
         // hideProgressBar();
+
+        firebaseDatabaseServices=new FirebaseDatabaseServices();
 
         //Auto Complete Google
         setUpAutoComplete();
@@ -228,11 +227,8 @@ public class AddBtnActivity extends AppCompatActivity
                                 Constants.SEARCH_CHILD_UPCOMING_KEY);
 
 
-                        databaseReference = FirebaseDatabase.getInstance().getReference();
-                        databaseReference.child(Constants.TRIP_CHILD_NAME)
-                                .child(Constants.CURRENT_USER_ID)
-                                .push()
-                                .setValue(newTrip);
+
+                        firebaseDatabaseServices.addTrip(newTrip);
 
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra("NEWTRIP", (Serializable) newTrip);
@@ -255,11 +251,8 @@ public class AddBtnActivity extends AppCompatActivity
                                     tripNameTextField.getEditText().getText().toString()
                                     , "start", notesList, mCalendar.getTime().toString(),
                                     Constants.SEARCH_CHILD_UPCOMING_KEY);
-                            databaseReference = FirebaseDatabase.getInstance().getReference();
-                            databaseReference.child(Constants.TRIP_CHILD_NAME)
-                                    .child(Constants.CURRENT_USER_ID)
-                                    .push()
-                                    .setValue(newTrip);
+
+                            firebaseDatabaseServices.addTrip(newTrip);
 
 
                             Intent resultIntent = new Intent();
@@ -275,11 +268,8 @@ public class AddBtnActivity extends AppCompatActivity
                                     tripNameTextField.getEditText().getText().toString()+ " Back"
                                     , "start", notesList, mCalendar.getTime().toString(),
                                     Constants.SEARCH_CHILD_UPCOMING_KEY);
-                            databaseReference = FirebaseDatabase.getInstance().getReference();
-                            databaseReference.child(Constants.TRIP_CHILD_NAME)
-                                    .child(Constants.CURRENT_USER_ID)
-                                    .push()
-                                    .setValue(TripBack);
+
+                            firebaseDatabaseServices.addTrip(newTrip);
 
                             Intent resultIntentback = new Intent();
                             resultIntentback.putExtra("TripBack", (Serializable) TripBack);
@@ -397,7 +387,7 @@ public class AddBtnActivity extends AppCompatActivity
         c.set(Calendar.DAY_OF_MONTH, i2);
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
         Log.i("Date Time Picker", currentDateString);
-        dateTextField.setText(currentDateString);
+        dateTextField.setText(i2+"-"+(i1 + 1)+"-"+ i);
 
         mCalendar.set(Calendar.YEAR, i);
         mCalendar.set(Calendar.MONTH, i1); // Month is zero-based
@@ -443,10 +433,7 @@ public class AddBtnActivity extends AppCompatActivity
         mCalendar.set(Calendar.MINUTE, i1);
         mCalendar.set(Calendar.SECOND, 0);
 
-
     }
-
-
     private void spinnerInit() {
         //Trip Direction Spinner
         adapterTripDirectionSpin = ArrayAdapter.createFromResource(this,
