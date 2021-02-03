@@ -97,14 +97,6 @@
                 android:layout_gravity="center" />
 
 
-        <com.twitter.sdk.android.core.identity.TwitterLoginButton
-            android:id="@+id/login_with_twitter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login_with_twitter"
-            android:enabled="true"
-            android:layout_marginBottom="10dp"
-            android:layout_gravity="center">
 
 
 

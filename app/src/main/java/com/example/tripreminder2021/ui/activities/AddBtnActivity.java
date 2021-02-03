@@ -39,6 +39,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.example.tripreminder2021.pojo.TripModel;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -225,6 +226,8 @@ public class AddBtnActivity extends AppCompatActivity
                                 tripNameTextField.getEditText().getText().toString()
                                 , "start", notesList, mCalendar.getTime().toString(),
                                 Constants.SEARCH_CHILD_UPCOMING_KEY);
+
+
                         databaseReference = FirebaseDatabase.getInstance().getReference();
                         databaseReference.child(Constants.TRIP_CHILD_NAME)
                                 .child(Constants.CURRENT_USER_ID)
@@ -525,12 +528,11 @@ public class AddBtnActivity extends AppCompatActivity
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
         try {
-            cal.setTime(sdf.parse(tripModel.dateTime));// all done
+            cal.setTime(sdf.parse(tripModel.getDateTime()));// all done
         } catch (ParseException e) {
             e.printStackTrace();
         }
         Intent intent = new Intent(this, AlarmEventReciever.class);
-        intent.putExtra(NEW_TRIP_OBJECT, (Serializable) tripModel);
 
         Bundle b = new Bundle();
         b.putParcelable(AddBtnActivity.NEW_TRIP_OBJ_SERIAL, tripModel);
@@ -549,7 +551,7 @@ public class AddBtnActivity extends AppCompatActivity
         Calendar cal2 = Calendar.getInstance();
         SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
         try {
-            cal2.setTime(sdf2.parse(tripModel.dateTime));// all done
+            cal2.setTime(sdf2.parse( mCalendar.getTime().toString()));// all done
         } catch (ParseException e) {
             e.printStackTrace();
         }

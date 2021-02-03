@@ -2,7 +2,6 @@
     <string name="app_name">Trip Reminder</string>
 
 
-
     <string name="facebook_app_id">3024190001138320</string>
     <string name="fb_login_protocol_scheme">fb3024190001138320</string>
 
@@ -58,6 +57,7 @@
     <string name="delete_trip">delete trip</string>
     <string name="cancel_trip">cancel trip</string>
     <string name="menu_slideshow">Logout</string>
+    <string name="language">language</string>
 
 
     <string-array name="times_array">

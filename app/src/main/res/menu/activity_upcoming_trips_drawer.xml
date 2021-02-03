@@ -22,5 +22,10 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
             android:title="@string/logout" />
+
+        <item
+            android:id="@+id/nav_language"
+            android:icon="@drawable/lang"
+            android:title="@string/language" />
     </group>
 </menu>

@@ -73,7 +73,7 @@ public class UpcomingRecyclerViewAdapter extends RecyclerView.Adapter<UpcomingRe
                 //remove from upcoming
                 //add to history
 
-                Uri gmIntentUri = Uri.parse("google.navigation:q=" + current.getEndloc());
+                Uri gmIntentUri = Uri.parse("google.navigation:q=" + currentTrip.getEndloc());
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 context.startActivity(mapIntent);
