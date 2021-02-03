@@ -2,6 +2,7 @@ package com.example.tripreminder2021.ui.navigation.history;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.example.tripreminder2021.*;
 import com.example.tripreminder2021.adapters.HistoryRecyclerViewAdapter;
 import com.example.tripreminder2021.adapters.UpcomingRecyclerViewAdapter;
 import com.example.tripreminder2021.pojo.TripModel;
+import com.example.tripreminder2021.ui.activities.MapsActivity;
 import com.example.tripreminder2021.viewModels.HistoryViewModel;
 import com.example.tripreminder2021.viewModels.UpcomingViewModel;
 
@@ -24,6 +26,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class HistoryFragment extends Fragment {
@@ -42,7 +45,7 @@ public class HistoryFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recycler);
         btn_draw_maps = root.findViewById(R.id.draw_map);
 
-       // btn_draw_maps.setOnClickListener(h->startActivity(new Intent(root.getContext(),MapsActivity.class)));
+        btn_draw_maps.setOnClickListener(h->openMaps());
 
 
         historyViewModel.init();
@@ -58,7 +61,12 @@ public class HistoryFragment extends Fragment {
     }
 
     private void openMaps() {
-        //recyclerViewAdapter.getData();
-        //startActivity(new Intent(getActivity(),MapsActivity.class));
+        ArrayList<TripModel> tripModels=new ArrayList<>();
+        tripModels=recyclerViewAdapter.getData();
+        Intent intent=new Intent(getContext(),MapsActivity.class);
+        Bundle args = new Bundle();
+        args.putSerializable("LIST",(Serializable) tripModels);
+        intent.putExtra("BUNDLE",args);
+        startActivity(intent);
     }
 }
