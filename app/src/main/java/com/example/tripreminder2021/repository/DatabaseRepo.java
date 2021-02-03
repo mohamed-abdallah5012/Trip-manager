@@ -24,8 +24,7 @@ public class DatabaseRepo {
     private static DatabaseRepo instance;
     private static DatabaseReference reference;
 
-    public static DatabaseRepo getInstance()
-    {
+    public static DatabaseRepo getInstance()    {
         if (instance==null)
         {
             instance=new DatabaseRepo();
@@ -33,6 +32,7 @@ public class DatabaseRepo {
         }
         return instance;
     }
+
     public void addTripToHistory(String trip_id) {
         reference.child(Constants.TRIP_CHILD_NAME).
                 child(Constants.CURRENT_USER_ID).
@@ -40,6 +40,7 @@ public class DatabaseRepo {
                 child(Constants.SEARCH_CHILD_NAME).setValue(Constants.SEARCH_CHILD_HISTORY_KEY);
 
     }
+
     public void changeTripStatus(String trip_id, TripStatus status) {
         reference.child(Constants.TRIP_CHILD_NAME).
                 child(Constants.CURRENT_USER_ID).
@@ -49,8 +50,8 @@ public class DatabaseRepo {
 
         saveTheTripInHistory(trip_id);
     }
-    private void saveTheTripInHistory(String trip_id)
-    {
+
+    private void saveTheTripInHistory(String trip_id)    {
         reference.child(Constants.TRIP_CHILD_NAME).
                 child(Constants.CURRENT_USER_ID).
                 child(trip_id).
@@ -58,19 +59,21 @@ public class DatabaseRepo {
                 setValue(Constants.SEARCH_CHILD_HISTORY_KEY);
 
     }
+
     public void updateTrip(String trip_id, TripModel tripModel) {
         reference.child(Constants.TRIP_CHILD_NAME)
                 .child(Constants.CURRENT_USER_ID)
                 .child(trip_id)
                 .setValue(tripModel);
     }
+
     public void deleteTrip(String trip_id) {
        reference.child(Constants.TRIP_CHILD_NAME)
                 .child(Constants.CURRENT_USER_ID)
                 .child(trip_id).removeValue();
     }
-    public void addTrip(TripModel trip)
-    {
+
+    public void addTrip(TripModel trip)    {
         trip.setTrip_id(reference.child(Constants.TRIP_CHILD_NAME)
                 .child(Constants.CURRENT_USER_ID)
                 .push().getKey());

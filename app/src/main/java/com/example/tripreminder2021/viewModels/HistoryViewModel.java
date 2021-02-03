@@ -27,7 +27,7 @@ public class HistoryViewModel extends ViewModel {
         tripList=HistoryRepository.getInstance().getHistoryTrips();
         return tripList;
     }
-    public MutableLiveData<ArrayList<TripModel>> getReportedList(long from,long to) {
+    public MutableLiveData<ArrayList<TripModel>> getReportedList(String from,String to) {
         tripReportedList=HistoryRepository.getInstance().getTripsReport(from, to);
         return tripReportedList;
     }

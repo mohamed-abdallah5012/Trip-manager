@@ -6,8 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,16 +35,17 @@ import java.util.Locale;
 public class ReportFragment extends Fragment {
 
     private ReportViewModel reportViewModel;
+    private DatePickerDialog datePickerDialog;
+    private ImageView start_date_picker;
+    private ImageView end_date_picker;
+
+    private TextView from,to;
+
+    private Button show_report;
     private  TextView textViewtest;
-    private EditText from,to;
 
-    DatePickerDialog datePickerDialog;
-    Calendar calendar = Calendar.getInstance();
-    Locale en = new Locale("en", "USA");
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMMM-YYYY", en);
 
-    Date date_minimal;
-    Date date_maximal;
+    ArrayList<TripModel> trips=new ArrayList<TripModel>();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -50,66 +53,59 @@ public class ReportFragment extends Fragment {
         reportViewModel =
                 ViewModelProviders.of(this).get(ReportViewModel.class);
         View root = inflater.inflate(R.layout.fragment_reports, container, false);
+
         textViewtest = root.findViewById(R.id.textViewtest);
+        from=root.findViewById(R.id.date_Selected_start);
+        to=root.findViewById(R.id.date_Selected_end);
+        start_date_picker=root.findViewById(R.id.date_Picker_start);
+        end_date_picker=root.findViewById(R.id.date_Picker_end);
+        show_report=root.findViewById(R.id.showReport);
 
-        from=root.findViewById(R.id.editTextDate1);
-        to=root.findViewById(R.id.editTextDate2);
+        start_date_picker.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH);
+            int year = calendar.get(Calendar.YEAR);
+            // date picker dialog
+            datePickerDialog = new DatePickerDialog(getContext(), (view, year12, monthOfYear, dayOfMonth) -> from.setText(dayOfMonth+"-"+(monthOfYear + 1)+"-"+ year12), year, month, day);
+            datePickerDialog.show();
+        });
 
-        from.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+        end_date_picker.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH);
+            int year = calendar.get(Calendar.YEAR);
+            // date picker dialog
+            datePickerDialog = new DatePickerDialog(getContext(), (view, year1, monthOfYear, dayOfMonth) -> to.setText(dayOfMonth+"-"+(monthOfYear + 1)+"-"+ year1), year, month, day);
+            datePickerDialog.show();
+        });
+
+        show_report.setOnClickListener(v ->{
+            Log.i("TAG", "click: ");
+            String start="".concat(from.getText().toString());
+            String To ="".concat(to.getText().toString());
+           trips=reportViewModel.getReportedList(start,To).getValue();
+            //textViewtest.setText("skkkkkkkkkize "+trips.size());
+            //Toast.makeText(getContext(), ""+trips.size(), Toast.LENGTH_SHORT).show();
+            //Log.i("TAG", ": lkkkkkkkkkkkkkkkkkkkkist"+trips.size());
+
+        });
+
+        reportViewModel.getReportedList(from.getText().toString(),to.getText().toString())
+                .observe(getViewLifecycleOwner(), new Observer<ArrayList<TripModel>>() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        calendar.set(year, month, dayOfMonth);
-                        from.setText(simpleDateFormat.format(calendar.getTime()));
-                        date_minimal = calendar.getTime();
-
-                        String input1 = from.getText().toString();
-                        String input2 = to.getText().toString();
-                        if (input1.isEmpty() && input2.isEmpty()){
-                            root.findViewById(R.id.showReport).setEnabled(false);
-                        }else {
-                            root.findViewById(R.id.showReport).setEnabled(true);
+                    public void onChanged(ArrayList<TripModel> list) {
+                        String a="";
+                        for (int i=0;i<list.size();i++)
+                        {
+                           a= a.concat(list.get(i).getDate());
                         }
+                        textViewtest.setText(a);
+                        Log.i("TAG", "onChanged: hhhhhhhhhhhhhh");
+                        Log.i("TAG", "onChanged: list"+list.size());
                     }
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.show();
-            }
-        });
-
-        to.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        calendar.set(year, month, dayOfMonth);
-                        to.setText(simpleDateFormat.format(calendar.getTime()));
-                        date_maximal = calendar.getTime();
-
-                        String input1 = to.getText().toString();
-                        String input2 = from.getText().toString();
-                        if (input1.isEmpty() && input2.isEmpty()){
-                            root.findViewById(R.id.showReport).setEnabled(false);
-                        }else {
-                            root.findViewById(R.id.showReport).setEnabled(true);
-                        }
-                    }
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.show();
-            }
-        });
-
-        root.findViewById(R.id.showReport).setOnClickListener(v ->{
-            Log.i("TAG", "onCreateView: from "+from.getText().toString());
-            Log.i("TAG", "onCreateView: to  "+to.getText().toString());
-            ArrayList<TripModel> tripModels=reportViewModel.
-                    getReportedList(date_minimal.getTime(),
-                            date_maximal.getTime()).getValue();
-            textViewtest.setText(tripModels.size()+"     ");
-            Log.i("TAG", "onCreateView: size "+tripModels.size());
-        });
+                });
         return root;
     }
 

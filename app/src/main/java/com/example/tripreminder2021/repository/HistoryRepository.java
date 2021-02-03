@@ -91,18 +91,8 @@ public class HistoryRepository {
         });
         return trips;
     }
-    public MutableLiveData<ArrayList<TripModel>> getTripsReport(long from,long to) {
+    public MutableLiveData<ArrayList<TripModel>> getTripsReport(String from,String to) {
         ArrayList<TripModel> allTripsReport=new ArrayList<>();
-
-        /* FirebaseDatabase database=FirebaseDatabase.getInstance();
-        DatabaseReference reference=database.getReference();
-        Query query=reference.child(Constants.TRIP_CHILD_NAME).
-                child(Constants.CURRENT_USER_ID).
-                orderByChild("date").
-                //equalTo(Constants.SEARCH_CHILD_HISTORY_KEY).
-                startAt(start).endAt(end);
-
-        */
 
         FirebaseDatabase database=FirebaseDatabase.getInstance();
         DatabaseReference reference=database.getReference();
@@ -117,7 +107,9 @@ public class HistoryRepository {
         Log.i("TAG", "getReportedTrip   start: "+from);
         Log.i("TAG", "getReportedTrip     end : "+to);
 
-        query.addValueEventListener(new ValueEventListener() {
+
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists())
@@ -135,6 +127,7 @@ public class HistoryRepository {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
         return tripsReport;

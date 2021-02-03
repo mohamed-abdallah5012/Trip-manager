@@ -384,7 +384,7 @@ public class AddBtnActivity extends AppCompatActivity
         c.set(Calendar.DAY_OF_MONTH, i2);
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
         Log.i("Date Time Picker", currentDateString);
-        dateTextField.setText(currentDateString);
+        dateTextField.setText(i2+"-"+(i1 + 1)+"-"+ i);
 
         mCalendar.set(Calendar.YEAR, i);
         mCalendar.set(Calendar.MONTH, i1); // Month is zero-based

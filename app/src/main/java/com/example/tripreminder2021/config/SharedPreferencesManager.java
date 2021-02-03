@@ -9,8 +9,6 @@ public class SharedPreferencesManager {
     private static SharedPreferences.Editor editor;
     private Context _context;
 
-    private static SharedPreferencesManager sharedPreferencesManager;
-
     private static final String PREF_NAME = "SHARED_PREFERENCE";
 
     // Shared preferences for Intro_Pager
@@ -23,9 +21,9 @@ public class SharedPreferencesManager {
 
 
     // Shared preferences for Login
-    private static final String IS_USER_LOGIN = "false";
-    private static final String CURRENT_USER_ID="user_ID";
-    private static final String CURRENT_USER_EMAIL="user@mail.com";
+    private static final String IS_USER_LOGIN = "IS_USER_LOGIN";
+    private static final String CURRENT_USER_ID="CURRENT_USER_ID";
+    private static final String CURRENT_USER_EMAIL="user@CURRENT_USER_EMAIL.com";
 
     public SharedPreferencesManager(Context context) {
         this._context = context;

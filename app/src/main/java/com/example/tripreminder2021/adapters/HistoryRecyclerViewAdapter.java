@@ -123,4 +123,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         this.list=list;
         notifyDataSetChanged();
     }
+    public ArrayList<TripModel> getData()
+    {
+        return this.list;
+    }
 }

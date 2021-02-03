@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Switch;
@@ -22,17 +21,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tripreminder2021.R;
+import com.example.tripreminder2021.config.Constants;
 import com.example.tripreminder2021.config.SharedPreferencesManager;
 import com.example.tripreminder2021.dataValidation.DataValidator;
 import com.example.tripreminder2021.dataValidation.ValidationServices;
 import com.example.tripreminder2021.ui.activities.UpcomingTripsActivity;
 import com.example.tripreminder2021.ui.activities.register.Activity_Register;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 
 import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -45,7 +46,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.TwitterAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class Activity_Login extends AppCompatActivity
@@ -60,6 +62,9 @@ public class Activity_Login extends AppCompatActivity
     private Switch aSwitch;
     private ProgressBar progressBar;
     // facebook google twitter
+
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private AccessTokenTracker accessTokenTracker;
     private LoginButton loginWithFacebook;
     private CallbackManager callbackManager;
     private SignInButton loginWithGoogle;
@@ -114,6 +119,33 @@ public class Activity_Login extends AppCompatActivity
 
         callbackManager = CallbackManager.Factory.create();
         loginWithFacebook.registerCallback(callbackManager,new FacebookCallBack());
+
+
+        authStateListener= firebaseAuth -> {
+
+            FirebaseUser firebaseUser=firebaseAuth.getCurrentUser();
+            if(firebaseUser!=null)
+            {
+                sharedPreferencesManager.setUserLogin(true);
+                sharedPreferencesManager.setCurrentUserID(firebaseUser.getUid());
+                sharedPreferencesManager.setCurrentUserEmail(firebaseUser.getEmail());
+            }
+            else
+            {
+                sharedPreferencesManager.setUserLogin(false);
+            }
+
+        };
+        accessTokenTracker=new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                if (currentAccessToken==null)
+                {
+                    FirebaseAuth.getInstance().signOut();
+                    sharedPreferencesManager.setUserLogin(false);
+                }
+            }
+        };
 
 //
 //        TwitterAuthConfig config =new TwitterAuthConfig(getString(R.string.twitter_api_key),
@@ -195,8 +227,28 @@ public class Activity_Login extends AppCompatActivity
         if (sharedPreferencesManager.isUserDataSaved()) {
             getUserData();
         }
-        super.onStart();
+        if (sharedPreferencesManager.isUserLogin())
+        {
+            Log.i("TAG", "onStart: "+ FirebaseAuth.getInstance().getCurrentUser().getUid());
+            Log.i("TAG", "onStart: "+ FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
+            Constants.CURRENT_USER_ID=FirebaseAuth.getInstance().getCurrentUser().getUid();
+            Constants.CURRENT_USER_EMAIL=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
+            Log.i("TAG", "onStart Constants: "+ Constants.CURRENT_USER_ID);
+            Log.i("TAG", "onStart Constants: "+ Constants.CURRENT_USER_EMAIL);
+
+        }
+        FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
+        super.onStart();
+    }
+    @Override
+    protected void onStop() {
+        if(authStateListener!=null)
+        {
+            FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
+        }
+        super.onStop();
     }
 
     @SuppressLint("ResourceType")

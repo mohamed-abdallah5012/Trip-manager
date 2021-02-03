@@ -12,7 +12,7 @@ public class ReportViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<TripModel>> tripReportedList=new MutableLiveData<>();
 
-    public MutableLiveData<ArrayList<TripModel>> getReportedList(long from, long to) {
+    public MutableLiveData<ArrayList<TripModel>> getReportedList(String from, String to) {
         tripReportedList=HistoryRepository.getInstance().getTripsReport(from, to);
         return tripReportedList;
     }

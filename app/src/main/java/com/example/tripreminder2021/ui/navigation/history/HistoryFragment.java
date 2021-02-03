@@ -1,9 +1,11 @@
 package com.example.tripreminder2021.ui.navigation.history;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 public class HistoryFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    private Button btn_draw_maps;
     private HistoryRecyclerViewAdapter recyclerViewAdapter;
     private HistoryViewModel historyViewModel;
     private ArrayList<TripModel> myList=new ArrayList<>();
@@ -37,6 +40,10 @@ public class HistoryFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_history, container, false);
 
         recyclerView = root.findViewById(R.id.recycler);
+        btn_draw_maps = root.findViewById(R.id.draw_map);
+
+       // btn_draw_maps.setOnClickListener(h->startActivity(new Intent(root.getContext(),MapsActivity.class)));
+
 
         historyViewModel.init();
         recyclerViewAdapter = new HistoryRecyclerViewAdapter(getContext(),myList);
@@ -48,5 +55,10 @@ public class HistoryFragment extends Fragment {
             recyclerViewAdapter.setData(list);
         });
         return root;
+    }
+
+    private void openMaps() {
+        //recyclerViewAdapter.getData();
+        //startActivity(new Intent(getActivity(),MapsActivity.class));
     }
 }

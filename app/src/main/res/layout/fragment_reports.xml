@@ -6,44 +6,61 @@
     android:layout_height="match_parent"
     tools:context=".ui.navigation.report.ReportFragment">
 
+    <ImageView
 
-    <EditText
-        android:id="@+id/editTextDate1"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="#d4d4d4"
-        android:hint="Select Date..."
-        android:padding="15dp"
-        android:textColor="#897"
-        android:textColorHint="#090"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:ems="10"
-        android:inputType="datetime"
-        app:layout_constraintBottom_toTopOf="@+id/editTextDate2"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/date_Picker_start"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/calendar_icon"
+        app:layout_constraintBottom_toTopOf="@id/date_Selected_start"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextDate2"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="#d4d4d4"
-        android:hint="Select Date..."
-        android:padding="15dp"
-        android:textColor="#897"
-        android:textColorHint="#090"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:ems="10"
-        android:inputType="datetime"
-        app:layout_constraintBottom_toTopOf="@+id/textViewtest"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+    <ImageView
+        android:id="@+id/date_Picker_end"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/calendar_icon"
+        app:layout_constraintBottom_toTopOf="@id/date_Selected_end"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate1" />
+        app:layout_constraintLeft_toRightOf="@id/guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/date_Selected_start"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/date_Picker_start"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <TextView
+        android:id="@+id/date_Selected_end"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date_Picker_end"
+        app:layout_constraintLeft_toLeftOf="@id/guideline"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline"/>
+
 
     <Button
         android:id="@+id/showReport"
@@ -51,22 +68,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="show_report"
-        app:layout_constraintBottom_toTopOf="@+id/textViewtest"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate2" />
+        app:layout_constraintTop_toBottomOf="@id/date_Selected_start" />
 
     <TextView
         android:id="@+id/textViewtest"
-        android:layout_width="300dp"
-        android:layout_height="67dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="20dp"
         android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/showReport" />
+        app:layout_constraintTop_toBottomOf="@id/showReport" />
 </androidx.constraintlayout.widget.ConstraintLayout>

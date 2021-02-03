@@ -6,8 +6,8 @@ public class Constants {
 
     public static final String USER_CHILD_NAME="Users";
     public static final String TRIP_CHILD_NAME="Trips";
-    public static  String CURRENT_USER_ID="user_id";
-    public static  String CURRENT_USER_EMAIL="user_email";
+    public static String CURRENT_USER_ID="CURRENT_USER_ID";
+    public static String CURRENT_USER_EMAIL="CURRENT_USER_EMAIL";
 
     // for filter history , upcoming
     public static final String SEARCH_CHILD_NAME="include_in";
