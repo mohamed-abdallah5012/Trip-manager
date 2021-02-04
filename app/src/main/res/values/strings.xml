@@ -63,6 +63,7 @@
     <string name="language">language</string>
     <string name="Reports">Your Reports</string>
     <string name="draw_on_map">Show Me On Maps</string>
+    <string name="changeLanguage">Change language</string>
 
 
     <string-array name="times_array">
@@ -77,6 +78,7 @@
         <item>Round Trip</item>
     </string-array>
     <string name="title_activity_maps">Map</string>
+    <string name="your_notes">your Notes    >> click on borders to collapse</string>
 
 
 </resources>
